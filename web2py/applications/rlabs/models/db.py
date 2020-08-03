@@ -93,7 +93,9 @@ auth = Auth(db, host_names=configuration.get('host.names'))
 # create all tables needed by auth, maybe add a list of extra fields
 # -------------------------------------------------------------------------
 auth.settings.extra_fields['auth_user'] = []
-auth.define_tables(username=False, signature=False)
+#auth.define_tables(username=False, signature=False)
+#Use username 
+auth.define_tables(username=True, signature=False)
 # Add database constraint
 
 # -------------------------------------------------------------------------
@@ -174,4 +176,13 @@ auth.settings.remember_me_form = False
 # -------------------------------------------------------------------------
 # Login method in m1_auth_login.py 
 # -------------------------------------------------------------------------
-#from gluon.contrib.login_methods.email_auth import email_auth 
+#from gluon.contrib.login_methods.email_auth import email_auth
+
+ 
+from gluon.contrib.login_methods.ldap_auth import ldap_auth
+auth.settings.login_methods = [auth, ldap_auth(mode='ad',
+                                               bind_dn='udsadmin@unizar.es',
+                                               bind_pw='4ctmcplc',
+                                               server='ad01.unizar.es',
+                                               base_dn='dc=unizar,dc=es',
+                                               )]

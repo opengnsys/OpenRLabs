@@ -1,3 +1,5 @@
 parameters_8000.py
+httpserver.log
 logs/**
+applications/admin/**
 

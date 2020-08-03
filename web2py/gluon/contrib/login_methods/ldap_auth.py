@@ -7,8 +7,9 @@ import sys
 import logging
 try:
     import ldap
-    import ldap.filter
+    import ldap.filter 
     ldap.set_option(ldap.OPT_REFERRALS, 0)
+    print('imported ldap')
 except Exception as e:
     logging.error('missing ldap, try "pip install python-ldap"')
     raise e
@@ -234,8 +235,11 @@ def ldap_auth(server='ldap',
                 if not is_user_in_allowed_groups(username, password):
                     return False
             con = init_ldap()
+            
             if ldap_mode == 'ad':
                 # Microsoft Active Directory
+                print('ad')
+                print(username)
                 if '@' not in username:
                     domain = []
                     for x in ldap_basedn.split(','):
@@ -249,6 +253,7 @@ def ldap_auth(server='ldap',
                 # ['ldap://ForestDnsZones.domain.com/DC=ForestDnsZones,
                 #    DC=domain,DC=com']
                 if ldap_binddn:
+                    print('admin account')
                     # need to search directory with an admin account 1st
                     con.simple_bind_s(ldap_binddn, ldap_bindpw)
                 else:
@@ -257,14 +262,27 @@ def ldap_auth(server='ldap',
                 # this will throw an index error if the account is not found
                 # in the ldap_basedn
                 requested_attrs = ['sAMAccountName']
+                print(manage_user)
                 if manage_user:
                     requested_attrs.extend([user_firstname_attrib, user_lastname_attrib, user_mail_attrib])
-
+                print(username_bare)
+                print(filterstr)
+                
                 result = con.search_ext_s(
                     ldap_basedn, ldap.SCOPE_SUBTREE,
                     "(&(sAMAccountName=%s)(%s))" % (ldap.filter.escape_filter_chars(username_bare), filterstr),
                     requested_attrs)[0][1]
+                '''
+                print(ldap_basedn)
+                result = con.search_ext_s(
+                    ldap_basedn, ldap.SCOPE_SUBTREE,
+                    "(sAMAccountName=184259)", )[0][1]
+                '''                    
+                print('result')
+                print(result)
+                
                 if not isinstance(result, dict):
+                    print('User not found')
                     # result should be a dict in the form
                     # {'sAMAccountName': [username_bare]}
                     logger.warning('User [%s] not found!' % username)
@@ -272,7 +290,7 @@ def ldap_auth(server='ldap',
                 if ldap_binddn:
                     # We know the user exists & is in the correct OU
                     # so now we just check the password
-                    con.simple_bind_s(username, password)
+                    print(con.simple_bind_s(username, password))
                 username = username_bare
 
             if ldap_mode == 'domino':
