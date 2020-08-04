@@ -19,10 +19,11 @@ def get_Apache_Guacamole_WebSocket(db):
     return (db(db.openRLabs_setup.id > 0).select().first()['URL_Apache_Guacamole_WebSocket'])
 
 def get_authentication_mail_pop3_server_info(db):
-    setup = db(db.openRLabs_setup.id > 0).select().first()
+    setup = db(db.pop3_server.id > 0).select().first()
     info = {}
-    info['url'] = setup['URL_authentication_mail_pop3_server']
-    info['tls_mode'] = setup['Use_TLS'] 
+    info['url'] = setup['url']
+    info['port'] = setup['port']
+    info['tls_mode'] = setup['use_tls'] 
     
     return info
 
@@ -34,3 +35,7 @@ def getSetup_OpenRLabs_table(db):
 
 def getSetup_OpenRLabs(db):    
     return db(db.openRLabs_setup.id > 0).select().first()
+
+def get_auth_method_values(table_auth_name, db):
+    return db(db[table_auth_name].id > 0).select().first()
+

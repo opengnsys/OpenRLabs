@@ -25,8 +25,7 @@ import connector
 
 
 @auth.requires_membership('enabled')
-def ous():   
-       
+def ous():
     opengnsys = Ognsys(db)
     active_reserves = ActiveReserves(db, auth.user_id, auth.user_groups.values())        
     

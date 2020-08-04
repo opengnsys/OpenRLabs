@@ -13,19 +13,21 @@ import gluon
 import poplib
 import logging
     
-def email_auth_pop3(server, domain, db, tls_mode= None ):
+def email_auth_pop3(server,port, domain, db, tls_mode= None ):
     
     def email_auth_pop3_aux(email,
                        password,
                        server=server,
+                       port=port,
                        domain=domain,
                        db=db,
                        tls_mode=tls_mode):
         
-        
+        # email contain only username.        
+        email = email + domain
         
         if db(db.auth_user.email == email).select():    
-            (host, port) = server.split(':')
+            host = server            
             (user) = ''.join(email).split('@')[0]
             
             

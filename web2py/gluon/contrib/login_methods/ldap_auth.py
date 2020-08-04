@@ -239,7 +239,6 @@ def ldap_auth(server='ldap',
             if ldap_mode == 'ad':
                 # Microsoft Active Directory
                 print('ad')
-                print(username)
                 if '@' not in username:
                     domain = []
                     for x in ldap_basedn.split(','):
@@ -253,7 +252,6 @@ def ldap_auth(server='ldap',
                 # ['ldap://ForestDnsZones.domain.com/DC=ForestDnsZones,
                 #    DC=domain,DC=com']
                 if ldap_binddn:
-                    print('admin account')
                     # need to search directory with an admin account 1st
                     con.simple_bind_s(ldap_binddn, ldap_bindpw)
                 else:
@@ -262,27 +260,16 @@ def ldap_auth(server='ldap',
                 # this will throw an index error if the account is not found
                 # in the ldap_basedn
                 requested_attrs = ['sAMAccountName']
-                print(manage_user)
                 if manage_user:
                     requested_attrs.extend([user_firstname_attrib, user_lastname_attrib, user_mail_attrib])
-                print(username_bare)
-                print(filterstr)
                 
                 result = con.search_ext_s(
                     ldap_basedn, ldap.SCOPE_SUBTREE,
                     "(&(sAMAccountName=%s)(%s))" % (ldap.filter.escape_filter_chars(username_bare), filterstr),
                     requested_attrs)[0][1]
-                '''
-                print(ldap_basedn)
-                result = con.search_ext_s(
-                    ldap_basedn, ldap.SCOPE_SUBTREE,
-                    "(sAMAccountName=184259)", )[0][1]
-                '''                    
-                print('result')
-                print(result)
+            
                 
-                if not isinstance(result, dict):
-                    print('User not found')
+                if not isinstance(result, dict):            
                     # result should be a dict in the form
                     # {'sAMAccountName': [username_bare]}
                     logger.warning('User [%s] not found!' % username)

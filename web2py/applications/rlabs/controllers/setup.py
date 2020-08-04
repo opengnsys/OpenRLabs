@@ -22,12 +22,31 @@ def index():
 @auth.requires_membership('admin')
 def openrlabs():            
     setups = adoDB_openRlabs_setup.getSetup_OpenRLabs(db)
-    
     if setups:     
-        form = SQLFORM(adoDB_openRlabs_setup.getSetup_OpenRLabs_table(db), setups)
+        form = SQLFORM(adoDB_openRlabs_setup.getSetup_OpenRLabs_table(db), setups)                
     else:
         form =  SQLFORM(adoDB_openRlabs_setup.getSetup_OpenRLabs_table(db))
             
+    if form.process().accepted:
+       response.flash = 'form accepted'
+    elif form.errors:
+       response.flash = 'form has errors'
+                   
+    return dict(form=form)
+
+@auth.requires_membership('admin')
+def auth_setup():            
+    setups = adoDB_openRlabs_setup.getSetup_OpenRLabs(db)
+        
+    if setups:
+        table_auth_values = adoDB_openRlabs_setup.get_auth_method_values(setups['auth_mode'], db)
+        print(table_auth_values)
+        if table_auth_values:            
+            form = SQLFORM(db[setups['auth_mode']], table_auth_values)            
+        else:
+            form = SQLFORM(db[setups['auth_mode']],) 
+                       
+                
     if form.process().accepted:
        response.flash = 'form accepted'
     elif form.errors:

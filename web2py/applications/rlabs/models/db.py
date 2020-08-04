@@ -178,11 +178,3 @@ auth.settings.remember_me_form = False
 # -------------------------------------------------------------------------
 #from gluon.contrib.login_methods.email_auth import email_auth
 
- 
-from gluon.contrib.login_methods.ldap_auth import ldap_auth
-auth.settings.login_methods = [auth, ldap_auth(mode='ad',
-                                               bind_dn='udsadmin@unizar.es',
-                                               bind_pw='4ctmcplc',
-                                               server='ad01.unizar.es',
-                                               base_dn='dc=unizar,dc=es',
-                                               )]
