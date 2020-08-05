@@ -29,6 +29,7 @@ def openrlabs():
             
     if form.process().accepted:
        response.flash = 'form accepted'
+       redirect(URL('setup','index'))
     elif form.errors:
        response.flash = 'form has errors'
                    
@@ -40,7 +41,6 @@ def auth_setup():
         
     if setups:
         table_auth_values = adoDB_openRlabs_setup.get_auth_method_values(setups['auth_mode'], db)
-        print(table_auth_values)
         if table_auth_values:            
             form = SQLFORM(db[setups['auth_mode']], table_auth_values)            
         else:
@@ -49,6 +49,7 @@ def auth_setup():
                 
     if form.process().accepted:
        response.flash = 'form accepted'
+       redirect(URL('setup','index'))       
     elif form.errors:
        response.flash = 'form has errors'
                    

@@ -1,34 +1,30 @@
 # -*- coding: utf-8 -*-
-'''
-email_auth_pop3 = local_import('email_auth_pop3')
-from email_auth_pop3 import email_auth_pop3
+
 from ados import adoDB_openRlabs_setup
 
+auth_mode = db(db.openRLabs_setup.id > 0).select().first()['auth_mode']
+setup = adoDB_openRlabs_setup.get_authentication_setup(auth_mode, db)
 
-server_info = adoDB_openRlabs_setup.get_authentication_mail_pop3_server_info(db)
-
-name_domain = server_info['url'].split(':')[0].split('.') 
-domain = name_domain[-2] + '.' + name_domain[-1]
-
-auth.settings.login_methods = [email_auth_pop3(server_info['url'], "@" + domain, db, server_info['tls_mode'])]   
-'''
-if db(db.openRLabs_setup.id > 0).select().first()['auth_mode'] == 'pop3_server':
+if auth_mode == 'pop3_server':
     email_auth_pop3 = local_import('email_auth_pop3')
     from email_auth_pop3 import email_auth_pop3
-    from ados import adoDB_openRlabs_setup
-        
-    server_info = adoDB_openRlabs_setup.get_authentication_mail_pop3_server_info(db)
-    
-    name_domain = server_info['url'].split(':')[0].split('.') 
+            
+    name_domain = setup['url'].split(':')[0].split('.') 
     domain = name_domain[-2] + '.' + name_domain[-1]
     
-    auth.settings.login_methods = [email_auth_pop3(server_info['url'], server_info['port'],  "@" + domain, db, server_info['tls_mode'])] 
+    auth.settings.login_methods = [email_auth_pop3(setup['url'], 
+                                                   setup['port'],  
+                                                   "@" + domain, 
+                                                   db, 
+                                                   setup['use_tls'])] 
 
-if db(db.openRLabs_setup.id > 0).select().first()['auth_mode'] == 'active_directory':    
+if auth_mode == 'active_directory':    
     from gluon.contrib.login_methods.ldap_auth import ldap_auth
+    
+    setup = adoDB_openRlabs_setup.get_authentication_setup(auth_mode, db)
     auth.settings.login_methods = [auth, ldap_auth(mode='ad',
-                                                   bind_dn='udsadmin@unizar.es',
-                                                   bind_pw='4ctmcplc',
-                                                   server='ad01.unizar.es',
-                                                   base_dn='dc=unizar,dc=es',
+                                                   bind_dn=setup['admin_ad'],
+                                                   bind_pw=setup['password'],
+                                                   server=setup['server_ad'],
+                                                   base_dn=setup['base_db'],
                                                    )]

@@ -7,14 +7,11 @@ db.define_table('active_directory',
                 Field('base_db', required=True),
                 )
 
-db.active_directory.id.readable = False
 db.define_table('pop3_server',
                 Field('url', required=True),
                 Field('port', 'integer', required=True),
                 Field('use_tls', type='boolean', required=True, default=True),
                 )
-
-db.pop3_server.id.readable = False
 
 db.define_table('openRLabs_setup',
                 Field('URL_Apache_Guacamole_WebSocket', required=True),
@@ -30,12 +27,16 @@ if db(db.openRLabs_setup).isempty():
     import load_init_setup
     
     load_init_setup.load_setup(db)
-    
 #Ensure only one record
-first = db(db.openRLabs_setup.id > 1).select().first()
-
-if first:
-    db(db.openRLabs_setup.id != first['id']).delete()
+def only_one_record(table):
+    first = db(db[table].id > 1).select().first()
     
-db.openRLabs_setup.id.readable = False
+    if first:
+        db(db[table].id != first['id']).delete()
+        
+    db[table].id.readable = False
+    
 
+only_one_record('active_directory')
+only_one_record('pop3_server')
+only_one_record('openRLabs_setup')    
