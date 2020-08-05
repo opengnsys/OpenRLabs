@@ -35,6 +35,43 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: active_directory; Type: TABLE; Schema: public; Owner: openrlabs
+--
+
+CREATE TABLE public.active_directory (
+    id integer NOT NULL,
+    admin_ad character varying(128),
+    password character varying(128),
+    server_ad character varying(512),
+    base_db character varying(512)
+);
+
+
+ALTER TABLE public.active_directory OWNER TO openrlabs;
+
+--
+-- Name: active_directory_id_seq; Type: SEQUENCE; Schema: public; Owner: openrlabs
+--
+
+CREATE SEQUENCE public.active_directory_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.active_directory_id_seq OWNER TO openrlabs;
+
+--
+-- Name: active_directory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: openrlabs
+--
+
+ALTER SEQUENCE public.active_directory_id_seq OWNED BY public.active_directory.id;
+
+
+--
 -- Name: active_reserves; Type: TABLE; Schema: public; Owner: openrlabs
 --
 
@@ -272,7 +309,8 @@ CREATE TABLE public.auth_user (
     password character varying(512),
     registration_key character varying(512),
     reset_password_key character varying(512),
-    registration_id character varying(512)
+    registration_id character varying(512),
+    username character varying(128)
 );
 
 
@@ -348,10 +386,9 @@ CREATE TABLE public."openRLabs_setup" (
     "URL_Apache_Guacamole_WebSocket" character varying(512),
     "URL_openGnsys_server" character varying(512),
     "URL_openRLabs_server" character varying(512),
-    "URL_authentication_mail_pop3_server" character varying(512),
     maxtime_reserve character varying(512),
     seconds_to_wait integer DEFAULT 200 NOT NULL,
-    "Use_TLS" boolean DEFAULT true NOT NULL
+    auth_mode character varying(512)
 );
 
 
@@ -417,6 +454,42 @@ ALTER SEQUENCE public.ous_setup_id_seq OWNED BY public.ous_setup.id;
 
 
 --
+-- Name: pop3_server; Type: TABLE; Schema: public; Owner: openrlabs
+--
+
+CREATE TABLE public.pop3_server (
+    id integer NOT NULL,
+    url character varying(512),
+    port integer NOT NULL,
+    use_tls boolean DEFAULT true NOT NULL
+);
+
+
+ALTER TABLE public.pop3_server OWNER TO openrlabs;
+
+--
+-- Name: pop3_server_id_seq; Type: SEQUENCE; Schema: public; Owner: openrlabs
+--
+
+CREATE SEQUENCE public.pop3_server_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.pop3_server_id_seq OWNER TO openrlabs;
+
+--
+-- Name: pop3_server_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: openrlabs
+--
+
+ALTER SEQUENCE public.pop3_server_id_seq OWNED BY public.pop3_server.id;
+
+
+--
 -- Name: services; Type: TABLE; Schema: public; Owner: openrlabs
 --
 
@@ -449,6 +522,13 @@ ALTER TABLE public.services_id_seq OWNER TO openrlabs;
 --
 
 ALTER SEQUENCE public.services_id_seq OWNED BY public.services.id;
+
+
+--
+-- Name: active_directory id; Type: DEFAULT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.active_directory ALTER COLUMN id SET DEFAULT nextval('public.active_directory_id_seq'::regclass);
 
 
 --
@@ -522,10 +602,25 @@ ALTER TABLE ONLY public.ous_setup ALTER COLUMN id SET DEFAULT nextval('public.ou
 
 
 --
+-- Name: pop3_server id; Type: DEFAULT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.pop3_server ALTER COLUMN id SET DEFAULT nextval('public.pop3_server_id_seq'::regclass);
+
+
+--
 -- Name: services id; Type: DEFAULT; Schema: public; Owner: openrlabs
 --
 
 ALTER TABLE ONLY public.services ALTER COLUMN id SET DEFAULT nextval('public.services_id_seq'::regclass);
+
+
+--
+-- Name: active_directory active_directory_pkey; Type: CONSTRAINT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.active_directory
+    ADD CONSTRAINT active_directory_pkey PRIMARY KEY (id);
 
 
 --
@@ -622,6 +717,14 @@ ALTER TABLE ONLY public.ous_setup
 
 ALTER TABLE ONLY public.ous_setup
     ADD CONSTRAINT ous_setup_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pop3_server pop3_server_pkey; Type: CONSTRAINT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.pop3_server
+    ADD CONSTRAINT pop3_server_pkey PRIMARY KEY (id);
 
 
 --
