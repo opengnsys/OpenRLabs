@@ -9,7 +9,6 @@ try:
     import ldap
     import ldap.filter 
     ldap.set_option(ldap.OPT_REFERRALS, 0)
-    print('imported ldap')
 except Exception as e:
     logging.error('missing ldap, try "pip install python-ldap"')
     raise e
@@ -238,7 +237,6 @@ def ldap_auth(server='ldap',
             
             if ldap_mode == 'ad':
                 # Microsoft Active Directory
-                print('ad')
                 if '@' not in username:
                     domain = []
                     for x in ldap_basedn.split(','):
@@ -277,7 +275,7 @@ def ldap_auth(server='ldap',
                 if ldap_binddn:
                     # We know the user exists & is in the correct OU
                     # so now we just check the password
-                    print(con.simple_bind_s(username, password))
+                    con.simple_bind_s(username, password)
                 username = username_bare
 
             if ldap_mode == 'domino':

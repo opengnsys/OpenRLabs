@@ -27,6 +27,7 @@ if db(db.openRLabs_setup).isempty():
     import load_init_setup
     
     load_init_setup.load_setup(db)
+    
 #Ensure only one record
 def only_one_record(table):
     first = db(db[table].id > 1).select().first()
