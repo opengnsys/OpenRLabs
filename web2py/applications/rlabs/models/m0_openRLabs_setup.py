@@ -2,7 +2,7 @@
 
 db.define_table('active_directory',
                 Field('admin_ad', required=True),
-                Field('password', type='password', required=True, requires=CRYPT()),
+                Field('password', type='password', required=True),
                 Field('server_ad', required=True),
                 Field('base_db', required=True),
                 )
@@ -18,16 +18,16 @@ db.define_table('openRLabs_setup',
                 Field('URL_openGnsys_server', required=True),
                 Field('URL_openRLabs_server', required=True),
                 Field('auth_mode', requires = IS_IN_SET(['active_directory', 'pop3_server'], 
-                                                        zero=None)),
+                                                        zero=None), default='pop3_server'),
                 Field('maxtime_reserve', required=True, default='2'),
                 Field('seconds_to_wait', required=True, default=200)
                 )
 
 if db(db.openRLabs_setup).isempty():
     import load_init_setup
-    
+
     load_init_setup.load_setup(db)
-    
+
 #Ensure only one record
 def only_one_record(table):
     first = db(db[table].id > 1).select().first()
