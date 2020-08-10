@@ -110,7 +110,7 @@ def remove_selected_users():
         user_ids.append(request.vars.ids)
       
     adoDB_users.remove_users(db,user_ids)
-    redirect(URL('setup', 'manage_users', vars=dict()))
+    redirect(URL('setup', 'manage', vars=dict()))
              
 @auth.requires_membership('admin')        
 def enable():
