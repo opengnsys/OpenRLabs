@@ -25,11 +25,10 @@ def email_auth_pop3(server,port, domain, db, tls_mode= None ):
         
         # email contain only username.        
         email = email + domain
-        
-        if db(db.auth_user.email == email).select():    
+        print(email)
+        if db(db.auth_user.email == email).select():
             host = server            
             (user) = ''.join(email).split('@')[0]
-            
             
             try:            
                 pop3 = None

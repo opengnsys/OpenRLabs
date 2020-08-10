@@ -132,6 +132,8 @@ def timetable():
     
     labs = opengnsys.get_labs()
     labs_set = {}
+    print('labs')
+    print(labs)
     for ou_name, labs_ou in labs.items():             
         for lab in labs_ou:
             if 'id' in lab:                
