@@ -42,18 +42,22 @@ class Ognsys:
     def set_apikey(self, ou_id):
         
         ou_credentials = ou.get_ou_credentials(self.db, ou_id)
-
-        self.http_request.set_connector(UsingPoolManagerConnector(ognsys_globals.local.__POOL_MANAGER__))        
-        credentials = self.http_request.do_action(DoLogin(ou_credentials))
-
-        if 'apikey' in credentials:
-            ognsys_globals.set_apikey(credentials['apikey'])
-
-            return True
+        
+        if ou_credentials:
+            
+            self.http_request.set_connector(UsingPoolManagerConnector(ognsys_globals.local.__POOL_MANAGER__))        
+            credentials = self.http_request.do_action(DoLogin(ou_credentials))
+    
+            if 'apikey' in credentials:
+                ognsys_globals.set_apikey(credentials['apikey'])
+    
+                return True
+            else:
+    
+                return False
         else:
-
             return False
-                
+        
     def get_labs(self):
         ous = self.get_ous()
         
