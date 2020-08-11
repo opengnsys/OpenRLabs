@@ -132,8 +132,6 @@ def timetable():
     
     labs = opengnsys.get_labs()
     labs_set = {}
-    print('labs')
-    print(labs)
     for ou_name, labs_ou in labs.items():             
         for lab in labs_ou:
             if 'id' in lab:                
@@ -154,7 +152,6 @@ def timetable():
 
             grid.element('#labs_timetable_lab_name')['_readonly'] = 'readonly'
             grid.element('#labs_timetable_lab_id')['_onchange'] = 'set_lab_name(event)'
-            #grid.element('#labs_timetable_Init_time')['_type'] = 'time'
             
         
         
