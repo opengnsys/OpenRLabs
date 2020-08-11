@@ -22,14 +22,34 @@ def index():
 @auth.requires_membership('admin')
 def openrlabs():            
     setups = adoDB_openRlabs_setup.getSetup_OpenRLabs(db)
-    
     if setups:     
-        form = SQLFORM(adoDB_openRlabs_setup.getSetup_OpenRLabs_table(db), setups)
+        form = SQLFORM(adoDB_openRlabs_setup.getSetup_OpenRLabs_table(db), setups)                
     else:
         form =  SQLFORM(adoDB_openRlabs_setup.getSetup_OpenRLabs_table(db))
             
     if form.process().accepted:
        response.flash = 'form accepted'
+       redirect(URL('setup','index'))
+    elif form.errors:
+       response.flash = 'form has errors'
+                   
+    return dict(form=form)
+
+@auth.requires_membership('admin')
+def auth_setup():            
+    setups = adoDB_openRlabs_setup.getSetup_OpenRLabs(db)
+        
+    if setups:
+        table_auth_values = adoDB_openRlabs_setup.get_auth_method_values(setups['auth_mode'], db)
+        if table_auth_values:            
+            form = SQLFORM(db[setups['auth_mode']], table_auth_values)            
+        else:
+            form = SQLFORM(db[setups['auth_mode']],) 
+                       
+                
+    if form.process().accepted:
+       response.flash = 'form accepted'
+       redirect(URL('setup','index'))       
     elif form.errors:
        response.flash = 'form has errors'
                    
@@ -90,7 +110,7 @@ def remove_selected_users():
         user_ids.append(request.vars.ids)
       
     adoDB_users.remove_users(db,user_ids)
-    redirect(URL('setup', 'manage_users', vars=dict()))
+    redirect(URL('setup', 'manage', vars=dict()))
              
 @auth.requires_membership('admin')        
 def enable():
@@ -112,6 +132,8 @@ def timetable():
     
     labs = opengnsys.get_labs()
     labs_set = {}
+    print('labs')
+    print(labs)
     for ou_name, labs_ou in labs.items():             
         for lab in labs_ou:
             if 'id' in lab:                

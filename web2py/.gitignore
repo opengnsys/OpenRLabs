@@ -1,4 +1,6 @@
-setup_ini.cfg
+setup_init.cfg
 parameters_8000.py
+httpserver.log
 logs/**
+applications/admin/**
 

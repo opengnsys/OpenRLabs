@@ -7,7 +7,7 @@ import sys
 import logging
 try:
     import ldap
-    import ldap.filter
+    import ldap.filter 
     ldap.set_option(ldap.OPT_REFERRALS, 0)
 except Exception as e:
     logging.error('missing ldap, try "pip install python-ldap"')
@@ -234,6 +234,7 @@ def ldap_auth(server='ldap',
                 if not is_user_in_allowed_groups(username, password):
                     return False
             con = init_ldap()
+            
             if ldap_mode == 'ad':
                 # Microsoft Active Directory
                 if '@' not in username:
@@ -259,12 +260,14 @@ def ldap_auth(server='ldap',
                 requested_attrs = ['sAMAccountName']
                 if manage_user:
                     requested_attrs.extend([user_firstname_attrib, user_lastname_attrib, user_mail_attrib])
-
+                
                 result = con.search_ext_s(
                     ldap_basedn, ldap.SCOPE_SUBTREE,
                     "(&(sAMAccountName=%s)(%s))" % (ldap.filter.escape_filter_chars(username_bare), filterstr),
                     requested_attrs)[0][1]
-                if not isinstance(result, dict):
+            
+                
+                if not isinstance(result, dict):            
                     # result should be a dict in the form
                     # {'sAMAccountName': [username_bare]}
                     logger.warning('User [%s] not found!' % username)

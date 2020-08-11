@@ -297,11 +297,12 @@ function swicht_sound(event){
 	<tbody>
 		{{for reserve in active_reserves:}}
 		<tr>
+			<!--
 			<td>				
 				<img onclick="swicht_sound(event)" style="height:2em;cursor:pointer;" 
 					data-sound="off" src="../static/images/sound_off.png" data-reserve="{{=reserve['id']}}"/>				
 			</td>
-		
+			-->
 			<td>	
 			<!--  If poolmanager cheking this host -->		
 			{{ if 'status' in reserve:}}				
@@ -324,7 +325,7 @@ function swicht_sound(event){
 			<span><button id="btn_connect_reserve_{{=reserve['id']}}"  type="button" class="btn btn-secondary"
 						  onclick="connect_remotePC(event)"
 						  data-reserve_id="{{=reserve['id']}}"
-						  data-sound="off"
+						  data-sound="on"
 						  data-pc_id="{{=reserve['pc_id']}}"
 						  data-lab_id="{{=reserve['lab_id']}}"
 						  data-ou_id="{{=reserve['ou_id']}}"

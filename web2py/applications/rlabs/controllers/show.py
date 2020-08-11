@@ -25,20 +25,24 @@ import connector
 
 
 @auth.requires_membership('enabled')
-def ous():   
-       
+def ous():
     opengnsys = Ognsys(db)
-    active_reserves = ActiveReserves(db, auth.user_id, auth.user_groups.values())        
-    
+    active_reserves = ActiveReserves(db, auth.user_id, auth.user_groups.values())
+            
     check_time = adoDB_openRlabs_setup.getSetup_OpenRLabs(db)['seconds_to_wait']
 
-    return dict(ous=opengnsys.get_ous(), 
-                services=adoDB_services.get_services(db),
-                maxtime_reserve = adoDB_openRlabs_setup.get_maxtime_reserve(db),
-                active_reserves= active_reserves.get_reserves(),
-                exits_reserves = active_reserves.exits_reserves(),
-                check_time = check_time
-                )
+    ous = opengnsys.get_ous()
+    if 'error' in ous:
+        return json.dumps({'error': 
+                          "Connection error Opengnsys."})
+    else:
+        return dict(ous=ous, 
+                    services=adoDB_services.get_services(db),
+                    maxtime_reserve = adoDB_openRlabs_setup.get_maxtime_reserve(db),
+                    active_reserves= active_reserves.get_reserves(),
+                    exits_reserves = active_reserves.exits_reserves(),
+                    check_time = check_time
+                    )
 
 @auth.requires_membership('enabled')
 def labs():

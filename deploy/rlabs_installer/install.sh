@@ -1,5 +1,5 @@
 #!/bin/bash
 
-sh install_web2py_rlabs.sh
-sh install_guacd_websocket.sh
-#sh 08_iptables.sh
+bash install_web2py_rlabs.sh
+bash install_guacd_websocket.sh
+#bash 08_iptables.sh

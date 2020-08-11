@@ -93,7 +93,9 @@ auth = Auth(db, host_names=configuration.get('host.names'))
 # create all tables needed by auth, maybe add a list of extra fields
 # -------------------------------------------------------------------------
 auth.settings.extra_fields['auth_user'] = []
-auth.define_tables(username=False, signature=False)
+#auth.define_tables(username=False, signature=False)
+#Use username 
+auth.define_tables(username=True, signature=False)
 # Add database constraint
 
 # -------------------------------------------------------------------------
@@ -174,4 +176,5 @@ auth.settings.remember_me_form = False
 # -------------------------------------------------------------------------
 # Login method in m1_auth_login.py 
 # -------------------------------------------------------------------------
-#from gluon.contrib.login_methods.email_auth import email_auth 
+#from gluon.contrib.login_methods.email_auth import email_auth
+

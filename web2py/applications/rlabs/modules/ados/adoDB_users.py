@@ -15,17 +15,17 @@ def get_users(db):
 def get_users_menbership(db):
     return (db.auth_membership.id>0)
 
-def insert_user(db, first_name, last_name, email ):
+def insert_user(db, first_name, last_name, email, username):
     db.auth_user.insert(first_name=first_name,
                            last_name=last_name,
                            email=email,
-                           registration_id=email)
+                           registration_id=username,
+                           username=username)
     db.commit()
 
 def remove_users(db,users_id):
     if users_id:
         for user_id in users_id:
-            print(user_id)
             db(db.auth_user.id == user_id).delete()
         
         db.commit()
