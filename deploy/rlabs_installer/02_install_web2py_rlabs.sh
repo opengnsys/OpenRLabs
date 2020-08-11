@@ -21,11 +21,13 @@ fi
 admin_ok=false
 while [ $admin_ok = false ];do
 	read -s -p "Enter rlabs admin password: " admin_passwd1
-	read -s -p "\n Repeat rlabs admin password: " admin_passwd2
+	echo ""
+	read -s -p "Repeat rlabs admin password: " admin_passwd2
 	if [ $admin_passwd1 = $admin_passwd2 ]; then 
 		admin_ok=true
 	else
-		echo "\n Passwords don't match."
+		echo ""
+		echo "Passwords don't match."
 	fi
 done
 
