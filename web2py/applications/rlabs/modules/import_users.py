@@ -25,7 +25,7 @@ def insert(file_stream, db):
             separator_char = ';'
             
         if '@' in line:
-            line = line.strip().strip('\n')
+            line = line.strip().strip('\n').strip('"')
             datos['first_name'] = line.split(separator_char)[0]
             datos['last_name'] = line.split(separator_char)[1]
             datos['email'] = line.split(separator_char)[2]

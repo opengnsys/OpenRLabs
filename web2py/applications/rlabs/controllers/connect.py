@@ -38,7 +38,10 @@ def do_reserve():
             connection = Connection(my_context)
             
             reserve = connection.do_reserve()
-            
+
+            if 'error' in reserve:
+                return json.dumps({'error', reserve['error']})
+
             logger.log(auth.user.first_name, auth.user.last_name,
                        reserve['equipo_reservado']['name'], reserve['equipo_reservado']['ip'], "do_reserve")
             

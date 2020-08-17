@@ -10,7 +10,10 @@ setup = db(db.openRLabs_setup.id > 0).select().first()
 
 auth_setup = adoDB_openRlabs_setup.get_authentication_setup(setup['auth_mode'], db)
 
-
+# 
+# module local_auth is not necesary. Option auth does the same, 
+# but local_auth allow debug login passwords errors. 
+#
 if auth_setup:
     if setup['auth_mode'] == 'pop3_server':
         from login_methods.email_auth_pop3 import email_auth_pop3
