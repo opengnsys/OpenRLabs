@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# web2py
+web2py/setup_init.cfg
+web2py/parameters_8000.py
+web2py/logs/**
+web2py/applications/admin/**
+web2py/applications/welcome/**
+web2py/applications/examples/**
+
+# rlabs
+cache/**
+databases/**
+errors/**
+sessions/**
+.settings/**
+*˜
+*.pyc
+*.bak
+*.log
+.project
+.pydevproject
+
+# Guacamole
+guacamole-websocket/.idea
