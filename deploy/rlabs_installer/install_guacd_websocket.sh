@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "+------------------------------------------+"
 echo "|                                          |"
 echo "|         Installing GUACD WEBSOCKET       |"

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "+------------------------------------------+"
 echo "|                                          |"
 echo "|         Installing WEB2PY_RLABS          |"

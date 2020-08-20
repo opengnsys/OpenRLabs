@@ -7,9 +7,6 @@ echo "|         Installing UWSGI                 |"
 echo "|                                          |"
 echo "+------------------------------------------+"
 
-pip3 install uwsgi
-
-
 tar xf packages/uwsgi.tar.gz -C packages/
 
 w2p_dir=$(cat tmp/w2p_dir.tmp)

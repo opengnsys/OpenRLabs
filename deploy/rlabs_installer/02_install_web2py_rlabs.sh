@@ -53,4 +53,3 @@ echo "ADMIN_PASSWD=$admin_passwd1" >> $w2p_dir/setup_init.cfg
 
 chown -R www-data.www-data $w2p_dir
 rm -fr packages/web2py_rlabs
-
