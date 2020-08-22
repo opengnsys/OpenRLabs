@@ -3,4 +3,9 @@ parameters_8000.py
 httpserver.log
 logs/**
 applications/admin/**
-
+openrlabs.e4p
+.eric6project/**
+__init__.py
+*.pyc
+*.log
+*.pid

@@ -37,3 +37,4 @@ EOF
 echo "restore schema"
 
 sudo -u postgres psql openrlabs < packages/openrlabs.dump
+

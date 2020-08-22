@@ -41,18 +41,17 @@ def auth_setup():
         
     if setups:
         table_auth_values = adoDB_openRlabs_setup.get_auth_method_values(setups['auth_mode'], db)
-        if table_auth_values:            
-            form = SQLFORM(db[setups['auth_mode']], table_auth_values)            
+        if setups['auth_mode'] == 'pop3_servers':
+            form = SQLFORM.grid(db.pop3_servers, 
+                                            csv=False, maxtextlength=500,
+                                            details=False, deletable=False, paginate = 10)
+
         else:
-            form = SQLFORM(db[setups['auth_mode']],) 
+            if table_auth_values:            
+                form = SQLFORM(db[setups['auth_mode']], table_auth_values)            
+            else:
+                form = SQLFORM(db[setups['auth_mode']],) 
                        
-                
-    if form.process().accepted:
-       response.flash = 'form accepted'
-       redirect(URL('setup','index'))       
-    elif form.errors:
-       response.flash = 'form has errors'
-                   
     return dict(form=form)
 
 @auth.requires_membership('admin')

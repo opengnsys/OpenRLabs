@@ -7,17 +7,18 @@ db.define_table('active_directory',
                 Field('base_db', required=True),
                 )
 
-db.define_table('pop3_server',
+db.define_table('pop3_servers',
                 Field('url', required=True),
                 Field('port', 'integer', required=True),
                 Field('use_tls', type='boolean', required=True, default=True),
+                Field('default_server', type='boolean', required=True, default=True),
                 )
 
 db.define_table('openRLabs_setup',
                 Field('URL_Apache_Guacamole_WebSocket', required=True),
                 Field('URL_openGnsys_server', required=True),
                 Field('URL_openRLabs_server', required=True),
-                Field('auth_mode', requires = IS_IN_SET(['active_directory', 'pop3_server'], 
+                Field('auth_mode', requires = IS_IN_SET(['active_directory', 'pop3_servers'], 
                                                         zero=None), default='pop3_server'),
                 Field('maxtime_reserve', required=True, default='2'),
                 Field('seconds_to_wait', required=True, default=200)
@@ -39,5 +40,4 @@ def only_one_record(table):
     
 
 only_one_record('active_directory')
-only_one_record('pop3_server')
 only_one_record('openRLabs_setup')    

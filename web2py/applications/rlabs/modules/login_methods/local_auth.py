@@ -7,6 +7,7 @@ def local_auth(db):
                         db=db):
         
         user = db(db.auth_user.username==username).select().first()
+
         if user:
             if (db.auth_user.password.validate(password) == (user.password, None)):
                 return True
