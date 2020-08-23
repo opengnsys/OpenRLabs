@@ -54,6 +54,7 @@ ALTER TABLE public.active_directory OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.active_directory_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -96,6 +97,7 @@ ALTER TABLE public.active_reserves OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.active_reserves_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -133,6 +135,7 @@ ALTER TABLE public.auth_cas OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.auth_cas_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -170,6 +173,7 @@ ALTER TABLE public.auth_event OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.auth_event_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -204,6 +208,7 @@ ALTER TABLE public.auth_group OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -238,6 +243,7 @@ ALTER TABLE public.auth_membership OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.auth_membership_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -274,6 +280,7 @@ ALTER TABLE public.auth_permission OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -314,6 +321,7 @@ ALTER TABLE public.auth_user OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.auth_user_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -352,6 +360,7 @@ ALTER TABLE public.labs_timetable OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.labs_timetable_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -390,6 +399,7 @@ ALTER TABLE public."openRLabs_setup" OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public."openRLabs_setup_id_seq"
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -426,6 +436,7 @@ ALTER TABLE public.ous_setup OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.ous_setup_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -461,6 +472,7 @@ ALTER TABLE public.pop3_server OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.pop3_server_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -495,6 +507,7 @@ ALTER TABLE public.services OWNER TO openrlabs;
 --
 
 CREATE SEQUENCE public.services_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
