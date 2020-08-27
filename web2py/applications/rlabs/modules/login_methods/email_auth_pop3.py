@@ -31,25 +31,34 @@ def email_auth_pop3(db,  pop3_server=None):
                     host = server['url']        
                     port = server['port']
                     tls_mode = server['use_tls']
-                    try:            
-                        pop3 = None
-                        pop3 = poplib.POP3_SSL(host, port) if tls_mode else poplib.POP3(host, port)                
-                        pop3.user(username)            
-                        auth_response = pop3.pass_(password)
-                        pop3.quit()
-                        if "+OK" in auth_response.decode('utf-8'):    
-                            return True                
-                        else:
+
+                    server_domain = (server['url'].split('.')[-2], server['url'].split('.')[-1])  
+                    email_domain = (user['auth_user']['email'].split('.')[-2].split('@')[-1], 
+                                    user['auth_user']['email'].split('.')[-1])
+
+                    if (server_domain == email_domain):
+                        try:            
+                            pop3 = None
+                            pop3 = poplib.POP3_SSL(host, port) if tls_mode else poplib.POP3(host, port)
+                            pop3.user(username)                                      
+                            auth_response = pop3.pass_(password)
+                            pop3.quit()
+                            if "+OK" in auth_response.decode('utf-8'): 
+                                return True                
+                            else:
+                                logging.exception('email_auth() failed')
+                                return False
+                        except:                
                             logging.exception('email_auth() failed')
+                            if pop3:
+                                try:
+                                    pop3.quit()
+                                except:  # server might already close connection after error
+                                    print(' not pop3')
+                                    return False                
                             return False
-                    except:                
-                        logging.exception('email_auth() failed')
-                        if pop3:
-                            try:
-                                pop3.quit()
-                            except:  # server might already close connection after error
-                                pass                
-                        return False                
+                    else:
+                        return False               
                 else:
                     return False
             else:

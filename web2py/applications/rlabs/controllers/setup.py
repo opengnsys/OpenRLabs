@@ -42,7 +42,7 @@ def auth_setup():
     if setups:
         table_auth_values = adoDB_openRlabs_setup.get_auth_method_values(setups['auth_mode'], db)
         if setups['auth_mode'] == 'pop3_servers':
-            form = SQLFORM.grid(db.pop3_servers, 
+            form = SQLFORM.grid(db.pop3_servers,
                                             csv=False, maxtextlength=500,
                                             details=False, deletable=False, paginate = 10)
 
