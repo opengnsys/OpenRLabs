@@ -26,3 +26,7 @@ sessions/**
 
 # Guacamole
 guacamole-websocket/.idea
+
+# deploy
+
+deploy/*.tar.gz
