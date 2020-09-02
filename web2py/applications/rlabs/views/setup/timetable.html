@@ -1,0 +1,23 @@
+{{extend 'layout.html'}}
+<link href="{{=URL('static', 'css/setup.css')}}" rel="stylesheet"	type="text/css" />
+
+<script type="text/javascript">
+
+function set_lab_name(event) {
+	console.log(event.target.options[event.target.selectedIndex].text);
+	var lab_name = event.target.options[event.target.selectedIndex].text;
+	document.getElementById('labs_timetable_lab_name').value = lab_name;	
+}
+
+</script>
+
+<div class="container_setup">
+	<div class="menu_config">
+	 {{include 'setup/menu.html'}} 
+	</div>
+	
+	<div class="form_config">
+		{{=grid}}
+	</div>
+</div>
+

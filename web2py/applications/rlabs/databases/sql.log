@@ -1,0 +1,160 @@
+timestamp: 2020-08-20T13:00:55.871724
+CREATE TABLE "auth_user"(
+    "id" SERIAL PRIMARY KEY,
+    "first_name" VARCHAR(128),
+    "last_name" VARCHAR(128),
+    "email" VARCHAR(512),
+    "username" VARCHAR(128),
+    "password" VARCHAR(512),
+    "registration_key" VARCHAR(512),
+    "reset_password_key" VARCHAR(512),
+    "registration_id" VARCHAR(512)
+);
+timestamp: 2020-08-20T13:01:09.655796
+CREATE TABLE "auth_user"(
+    "id" SERIAL PRIMARY KEY,
+    "first_name" VARCHAR(128),
+    "last_name" VARCHAR(128),
+    "email" VARCHAR(512),
+    "username" VARCHAR(128),
+    "password" VARCHAR(512),
+    "registration_key" VARCHAR(512),
+    "reset_password_key" VARCHAR(512),
+    "registration_id" VARCHAR(512)
+);
+timestamp: 2020-08-20T13:02:21.043445
+CREATE TABLE "auth_user"(
+    "id" SERIAL PRIMARY KEY,
+    "first_name" VARCHAR(128),
+    "last_name" VARCHAR(128),
+    "email" VARCHAR(512),
+    "username" VARCHAR(128),
+    "password" VARCHAR(512),
+    "registration_key" VARCHAR(512),
+    "reset_password_key" VARCHAR(512),
+    "registration_id" VARCHAR(512)
+);
+faked!
+timestamp: 2020-08-20T13:02:21.044019
+CREATE TABLE "auth_group"(
+    "id" SERIAL PRIMARY KEY,
+    "role" VARCHAR(512),
+    "description" TEXT
+);
+faked!
+timestamp: 2020-08-20T13:02:21.044537
+CREATE TABLE "auth_membership"(
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE  
+);
+faked!
+timestamp: 2020-08-20T13:02:21.045183
+CREATE TABLE "auth_permission"(
+    "id" SERIAL PRIMARY KEY,
+    "group_id" INTEGER REFERENCES "auth_group" ("id") ON DELETE CASCADE  ,
+    "name" VARCHAR(512),
+    "table_name" VARCHAR(512),
+    "record_id" INTEGER
+);
+faked!
+timestamp: 2020-08-20T13:02:21.045773
+CREATE TABLE "auth_event"(
+    "id" SERIAL PRIMARY KEY,
+    "time_stamp" TIMESTAMP,
+    "client_ip" VARCHAR(512),
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "origin" VARCHAR(512),
+    "description" TEXT
+);
+faked!
+timestamp: 2020-08-20T13:02:21.046348
+CREATE TABLE "auth_cas"(
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "created_on" TIMESTAMP,
+    "service" VARCHAR(512),
+    "ticket" VARCHAR(512),
+    "renew" CHAR(1)
+);
+faked!
+timestamp: 2020-08-20T13:02:21.047340
+CREATE TABLE "active_directory"(
+    "id" SERIAL PRIMARY KEY,
+    "admin_ad" VARCHAR(512),
+    "password" VARCHAR(512),
+    "server_ad" VARCHAR(512),
+    "base_db" VARCHAR(512)
+);
+faked!
+timestamp: 2020-08-20T13:02:21.047789
+CREATE TABLE "pop3_server"(
+    "id" SERIAL PRIMARY KEY,
+    "url" VARCHAR(512),
+    "port" INTEGER,
+    "use_tls" CHAR(1)
+);
+faked!
+timestamp: 2020-08-20T13:02:21.048316
+CREATE TABLE "openRLabs_setup"(
+    "id" SERIAL PRIMARY KEY,
+    "URL_Apache_Guacamole_WebSocket" VARCHAR(512),
+    "URL_openGnsys_server" VARCHAR(512),
+    "URL_openRLabs_server" VARCHAR(512),
+    "auth_mode" VARCHAR(512),
+    "maxtime_reserve" VARCHAR(512),
+    "seconds_to_wait" VARCHAR(512)
+);
+faked!
+timestamp: 2020-08-20T13:02:21.071215
+CREATE TABLE "ous_setup"(
+    "id" SERIAL PRIMARY KEY,
+    "ou_id" VARCHAR(512) UNIQUE,
+    "ou_name" VARCHAR(512) UNIQUE,
+    "ou_user" VARCHAR(512),
+    "ou_password" VARCHAR(512)
+);
+faked!
+timestamp: 2020-08-20T13:02:21.071879
+CREATE TABLE "services"(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR(512) UNIQUE,
+    "port" VARCHAR(512) UNIQUE
+);
+faked!
+timestamp: 2020-08-20T13:02:21.077959
+CREATE TABLE "active_reserves"(
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  ,
+    "ou_id" VARCHAR(512),
+    "lab_id" VARCHAR(512),
+    "pc_id" VARCHAR(512),
+    "pc_name" VARCHAR(512),
+    "expiration_time" TIMESTAMP,
+    "ip" VARCHAR(512),
+    "protocol" VARCHAR(512),
+    "port" VARCHAR(512)
+);
+faked!
+timestamp: 2020-08-20T13:02:21.083631
+CREATE TABLE "labs_timetable"(
+    "id" SERIAL PRIMARY KEY,
+    "lab_id" INTEGER,
+    "lab_name" VARCHAR(512),
+    "Init_Day" INTEGER,
+    "End_Day" INTEGER,
+    "Init_time" TIME,
+    "End_time" TIME
+);
+faked!
+timestamp: 2020-08-20T13:39:45.834435
+CREATE TABLE "pop3_servers"(
+    "id" SERIAL PRIMARY KEY,
+    "url" VARCHAR(512)
+);
+success!
+timestamp: 2020-08-20T13:39:45.854550
+ALTER TABLE "pop3_server" ADD "url_id" INTEGER REFERENCES "pop3_servers" ("id") ON DELETE CASCADE  ;
+timestamp: 2020-08-20T13:39:45.860331
+ALTER TABLE "pop3_server" DROP COLUMN "url";
+success!
