@@ -1,11 +1,11 @@
 # Python
-__pycache__/
-*.py[cod]
-*$py.class
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
 
 # web2py
 web2py/**
-!web2py/applications/rlabs/
+!web2py/applications/rlabs
 
 
 # rlabs
@@ -27,6 +27,6 @@ guacamole-websocket/target/**
 
 
 # Other files
-*.tar.gz
-*.bak
-*.log
+**/*.tar.gz
+**/*.bak
+**/*.log
