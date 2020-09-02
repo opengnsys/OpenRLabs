@@ -4,12 +4,9 @@ __pycache__/
 *$py.class
 
 # web2py
-web2py/setup_init.cfg
-web2py/parameters_8000.py
-web2py/logs/**
-web2py/applications/admin/**
-web2py/applications/welcome/**
-web2py/applications/examples/**
+web2py/**
+!web2py/applications/rlabs/
+
 
 # rlabs
 cache/**
@@ -26,7 +23,10 @@ sessions/**
 
 # Guacamole
 guacamole-websocket/.idea
+guacamole-websocket/target/**
 
-# deploy
 
-deploy/*.tar.gz
+# Other files
+*.tar.gz
+*.bak
+*.log
