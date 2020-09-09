@@ -22,7 +22,7 @@ import ognsys_globals
 from http_requests import HttpRequest, UsingPoolManagerConnector, \
                                         NotUsingPoolManagerConnector
                                         
-from ognsys_actions import GetDiskConfigClient, GetLabClients, GetStatusClient
+from ognsys_actions import GetDiskConfigClient, GetLabClients, GetStatusClient, GetImageInfo
 
 
 
@@ -80,6 +80,14 @@ class Lab:
             else:
                 return False
 
+    
+    def __check_is_inremotepc(self, image_id):
+        self.http_request.set_connector(UsingPoolManagerConnector(ognsys_globals.local.__POOL_MANAGER__))        
+        image_info =  self.http_request.do_action(GetImageInfo(self.ou_id, image_id))
+        if "inremotepc" in image_info:
+            return image_info["inremotepc"]
+        else:
+            return False
             
     def get_remote_clients(self):
 
@@ -132,9 +140,12 @@ class Lab:
                             if image['id'] == partition['image']['id']:
                                 image__aready_added = True                
                         
-                        if image__aready_added == False:                          
-                            images_info.append({'id': partition['image']['id'], 'os': partition['os'], 
-                                                'lab_id': self.lab_id, 'ou_id': self.ou_id})
+                        if image__aready_added == False:                            
+                            if self.__check_is_inremotepc(partition['image']['id']):
+                                images_info.append({'id': partition['image']['id'], 'os': partition['os'], 
+                                                    'lab_id': self.lab_id, 'ou_id': self.ou_id})
+        
+        
         
         if len(images_info) == 0:
             return {'error' : 'Error Los equipos no tienen imagen asignada en OpenGnsys.'}

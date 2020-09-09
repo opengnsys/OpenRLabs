@@ -13,6 +13,7 @@ $pkg_mng --yes install python3 python3-pip
 
 $pkg_mng --yes install python3-ldap
 
-$pkg_mng --yes install python3-gevent
 
-pip3 install -r requirements.txt
+$pkg_mng --yes install python3-gevent python3-greenlet
+
+sudo pip3 install requests

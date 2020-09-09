@@ -30,11 +30,28 @@ cumplir con el orden de instalación requerido.
 
 Desde el fichero install.sh se ejecutan todos los scripts.
 Para instalar el programa.
+
 Ejemplo con el usuario "foo" (necesitará privilegios 
 de administración):
 
 chmod +x install.sh
-sudo foo install.sh
+sudo foo ./install.sh
+
+ACTUALIZACIÓN
+
+El proceso de actualización salva los datos de la base de
+datos, instalar el nuevo esquema e importa dichos datos. Posteriormente
+actualiza el código de la aplicación openrlabs.
+
+No se reinstalan ni el framework web2py ni el resto de componentes: websocket,
+nginx, ...etc.
+
+Ejemplo de actualización con el usuario de sistema "foo" (necesitará 
+privilegios de administración):
+
+chmod +x update.sh
+sudo foo ./update.sh
+
 
 PROBLEMAS DETECTADOS Y LIMITACIONES
 
