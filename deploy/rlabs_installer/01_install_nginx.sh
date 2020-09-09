@@ -7,4 +7,4 @@ echo "|         Installing NGINX                 |"
 echo "|                                          |"
 echo "+------------------------------------------+"
 
-$pkg_mng --yes install nginx
+$pkg_mng --yes install nginx 

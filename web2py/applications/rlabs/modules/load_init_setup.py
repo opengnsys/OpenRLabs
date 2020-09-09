@@ -53,7 +53,7 @@ def load_setup(db):
     else: 
         admin = db.auth_group.insert(role = 'admin')
     
-    
+    #NOTE: If admin passwd is too short, validate don't encrypt password
     user = db.auth_user.insert(first_name=ADMIN_RLABS, 
                                 username=ADMIN_RLABS,
                                 password=db.auth_user.password.validate(ADMIN_PASSWD)[0],

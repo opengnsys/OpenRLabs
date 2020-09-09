@@ -31,3 +31,6 @@ guacamole-websocket/target/**
 *.tar.gz
 *.bak
 *.log
+
+#deploy
+!deploy/rlabs_installer/packages/**

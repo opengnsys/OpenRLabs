@@ -91,7 +91,14 @@ class GetOUS(OgnsysAction):
                     
         self.url = self.url_base
 
-    
+class GetImageInfo(OgnsysAction):
+    def __init__(self, ou_id, image_id):
+        super().__init__(UrlGroupOus())        
+                      
+        
+        self.action = 'GET'
+        
+        self.url = self.url_base + '/' + str(ou_id) + '/images/' + str(image_id) 
 
 class GetLabsOu(OgnsysAction):
     def __init__(self, ou_id):
@@ -100,8 +107,8 @@ class GetLabsOu(OgnsysAction):
         self.ou_id = ou_id        
         self.action = 'GET'
         
-        self.url = self.url_base
-
+        self.url = self.url_base        
+        
 class GetLabClients(OgnsysAction):
     def __init__(self, ou_id, lab_id):
         super().__init__(UrlGroupClients(ou_id,lab_id))

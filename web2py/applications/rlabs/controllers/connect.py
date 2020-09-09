@@ -65,10 +65,8 @@ def check_pc_status():
                     
             connection = Connection(my_context)  
             pc_status_info = connection.check_pc_status()
-            if 'error' in pc_status_info:
-                print('unreserve')
-
-                                
+            
+            if 'error' in pc_status_info:                    
                 client = Client(my_context)
                 
                 client.unreserve_remote_pc()
