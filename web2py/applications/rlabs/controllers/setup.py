@@ -52,6 +52,12 @@ def auth_setup():
             else:
                 form = SQLFORM(db[setups['auth_mode']],) 
                        
+    if form.process().accepted:
+       response.flash = 'form accepted'
+       redirect(URL('setup','index'))
+    elif form.errors:
+       response.flash = 'form has errors'
+                              
     return dict(form=form)
 
 @auth.requires_membership('admin')
