@@ -82,7 +82,7 @@ def custom_ldap_auth(server='ldap',
                       manage_groups=manage_groups,
                       allowed_groups=allowed_groups,
                       group_mapping=group_mapping,
-                      db=db):
+                      db=db):        
         if password == '':  # http://tools.ietf.org/html/rfc4513#section-5.1.2
             logger.warning('blank password not allowed')
             return False
@@ -91,7 +91,6 @@ def custom_ldap_auth(server='ldap',
         
         try:
             con = init_ldap()
-
             if ldap_mode == 'ad':
                 # Microsoft Active Directory
                 if '@' not in username:
@@ -101,27 +100,32 @@ def custom_ldap_auth(server='ldap',
                             domain.append(x.split('=')[-1])
                     username = "%s@%s" % (username, '.'.join(domain))
                 username_bare = username.split("@")[0]
-                con.set_option(ldap.OPT_PROTOCOL_VERSION, 3)                
+                
+                con.set_option(ldap.OPT_PROTOCOL_VERSION, 3)
+                                
                 # In cases where ForestDnsZones and DomainDnsZones are found,
                 # result will look like the following:
                 # ['ldap://ForestDnsZones.domain.com/DC=ForestDnsZones,
                 #    DC=domain,DC=com']
-                if ldap_binddn:
+                if ldap_binddn:                                                     
                     # need to search directory with an admin account 1st
-                    con.simple_bind_s(ldap_binddn, ldap_bindpw.strip())
+                    try:                                                
+                        con.simple_bind_s(ldap_binddn, ldap_bindpw.strip())
+                    except Exception as e:
+                        print(e)
+                    
                 else:
                     # credentials should be in the form of username@domain.tld
                     con.simple_bind_s(username, password)
                 # this will throw an index error if the account is not found
                 # in the ldap_basedn
+                #requested_attrs = ['sAMAccountName','memberOf']
                 requested_attrs = ['sAMAccountName']
-                
                 result = con.search_ext_s(
                     ldap_basedn, ldap.SCOPE_SUBTREE,
                     "(&(sAMAccountName=%s)(%s))" % (ldap.filter.escape_filter_chars(username_bare), filterstr),
                     requested_attrs)[0][1]
-                    
-                print(result)                       
+                                                           
                 if not isinstance(result, dict):            
                     # result should be a dict in the form
                     # {'sAMAccountName': [username_bare]}
@@ -172,6 +176,7 @@ def custom_ldap_auth(server='ldap',
         Inicialize ldap connection
         """
         logger.info('[%s] Initialize ldap connection' % str(ldap_server))
+        
         if secure:
             if not ldap_port:
                 ldap_port = 636
@@ -193,15 +198,24 @@ def custom_ldap_auth(server='ldap',
                 ldap.set_option(ldap.OPT_X_TLS_CERTFILE, cert_file)
             if key_file:
                 ldap.set_option(ldap.OPT_X_TLS_KEYFILE, key_file)
-                
-            con = ldap.initialize("ldaps://" + ldap_server + ":" + str(ldap_port))
+
+            con = ldap.initialize("ldaps://" + ldap_server + ":" + str(ldap_port))            
         else:
             if not ldap_port:
                 ldap_port = 389
             con = ldap.initialize(
                 "ldap://" + ldap_server + ":" + str(ldap_port))
+            
+        # Instruct libldap to apply pending TLS settings and create a new internal TLS context
+        # Ref: https://www.python-ldap.org/en/python-ldap-3.3.0/reference/ldap.html
+        con.set_option(ldap.OPT_X_TLS_NEWCTX, 0)
+                    
         if tls:
-            con.start_tls_s()
+            try:
+                con.start_tls_s()
+            except Exception as e:
+                raise(e)                
+           
         return con
 
 

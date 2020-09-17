@@ -28,13 +28,13 @@ def insert(file_stream, db):
             line = line.strip().strip('\n').strip('"')
             datos['first_name'] = line.split(separator_char)[0]
             datos['last_name'] = line.split(separator_char)[1]
-            datos['email'] = line.split(separator_char)[2]
-            datos['username'] = datos['email'].split('@')[0]
+            datos['email'] = line.split(separator_char)[2]            
             if '@' not in datos['email']:
                 error = True
                 info_insert = 'Error, usuario ' + datos['name'] + 'formato de email incorrecto'
                 break
             
+            datos['username'] = line.split(separator_char)[3]
             
             found = db(db.auth_user.username == datos['username']).count()
             #check user not exits
