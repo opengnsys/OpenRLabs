@@ -40,7 +40,7 @@ class Connection:
         # Al hacer reserva se manda arrancar el equipo y se crea entrada en cola acciones para levantar el equipo
         # deseado.
         equipo_reservado = self.client.reserve_remote_pc()
-
+        
         if 'id' not in equipo_reservado:        
             return {'error': '\n ' + errors.ERROR_RESERVA}
         

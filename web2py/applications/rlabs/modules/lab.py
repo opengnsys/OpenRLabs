@@ -146,17 +146,17 @@ class Lab:
                                                     'lab_id': self.lab_id, 'ou_id': self.ou_id})
         
         
-        
-        if len(images_info) == 0:
-            return {'error' : 'Error Los equipos no tienen imagen asignada en OpenGnsys.'}
-         
+                 
         if pcs_disponibles == 0:
             return {'error' : 'Error No quedan equipos disponibles'}        
         else:
-            return {'PCs_info' : sorted(PCs_info, key = lambda k:k['pc']['name'], reverse=False),
-                    'images_info' : images_info,
-                    'disponibles_info': {'lab_id': self.lab_id,
-                                         'total': pcs_total,
-                                         'disponibles': pcs_disponibles}
+            if len(images_info) == 0:
+                return {'error' : 'Error Los equipos no tienen imagen asignada en OpenGnsys.'}
+            else:
+                return {'PCs_info' : sorted(PCs_info, key = lambda k:k['pc']['name'], reverse=False),
+                        'images_info' : images_info,
+                        'disponibles_info': {'lab_id': self.lab_id,
+                                             'total': pcs_total,
+                                             'disponibles': pcs_disponibles}
                     }        
         

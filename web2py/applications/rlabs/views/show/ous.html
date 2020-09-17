@@ -141,18 +141,21 @@ function do_reserve(event){
  *  When finished, call fucntion to either connect a PC or do port forwarding.
  *****/
 function check_status_client(respuesta) {
+	console.log(respuesta)
+	 
 	add_text_console(respuesta.status);
-	
 	var parametros_status = '';	
 	for (param in respuesta.equipo_reservado) {
 		parametros_status = parametros_status + "&" + param + "=" + respuesta.equipo_reservado[param];
 	}
 	
 	if (respuesta.finalizado === undefined) {		
-		
-		requestAJAX('{{=URL("connect", "check_pc_status")}}', parametros_status, check_status_client);
-	} else {
-		console.log('finalizado ok')
+		if (typeof(respuesta.error) === "undefined"){
+			requestAJAX('{{=URL("connect", "check_pc_status")}}', parametros_status, check_status_client);
+		} else {
+			alert(respuesta.error);
+		}
+	} else {		
 		if (typeof(respuesta.error) === "undefined"){
 			document.getElementById("buttonConsole").style.display = 'block';
 			stop_progress_bar();			

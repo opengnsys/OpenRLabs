@@ -24,7 +24,7 @@ import ports_manager
 import logger
 
 @auth.requires_membership('enabled')   
-def do_reserve():          
+def do_reserve():
     if request.post_vars:
                 
         opengnsys = Ognsys(db)    
@@ -38,18 +38,19 @@ def do_reserve():
             connection = Connection(my_context)
             
             reserve = connection.do_reserve()
-
+            
             if 'error' in reserve:
-                return json.dumps({'error', reserve['error']})
+                return json.dumps({'error' : reserve['error']})
 
             logger.log(auth.user.first_name, auth.user.last_name,
                        reserve['equipo_reservado']['name'], reserve['equipo_reservado']['ip'], "do_reserve")
             
             return json.dumps(reserve)
         else:
-            return json.dumps({'error', 'Error de inicialización, compruebe configuración opengnsys'})
+            return json.dumps({'error': 'Error de inicialización, compruebe configuración opengnsys'})
     else:        
-        return json.dumps({'error', 'Error haciendo reserva status'})
+        return json.dumps({'error': 'Error haciendo reserva'})
+
     
 @auth.requires_membership('enabled')      
 def check_pc_status():
