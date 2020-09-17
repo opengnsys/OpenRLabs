@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # web2py_source
-web2py_source/**
+web2py_source/
 
 # web2py
 web2py/**
