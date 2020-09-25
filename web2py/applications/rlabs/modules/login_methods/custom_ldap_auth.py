@@ -14,6 +14,7 @@ except Exception as e:
     print('missing ldap, try "pip install python-ldap"')
     raise e
 
+from ados import adoDB_nip_groups
 
 def custom_ldap_auth(server='ldap',
               port=None,
@@ -120,7 +121,9 @@ def custom_ldap_auth(server='ldap',
                 # this will throw an index error if the account is not found
                 # in the ldap_basedn
                 #requested_attrs = ['sAMAccountName','memberOf']
-                requested_attrs = ['sAMAccountName']
+                requested_attrs = ['memberOf']
+                
+                
                 result = con.search_ext_s(
                     ldap_basedn, ldap.SCOPE_SUBTREE,
                     "(&(sAMAccountName=%s)(%s))" % (ldap.filter.escape_filter_chars(username_bare), filterstr),
@@ -131,6 +134,7 @@ def custom_ldap_auth(server='ldap',
                     # {'sAMAccountName': [username_bare]}
                     logger.warning('User [%s] not found!' % username)
                     return False
+
                 if ldap_binddn:
                     # We know the user exists & is in the correct OU
                     # so now we just check the password
@@ -148,6 +152,8 @@ def custom_ldap_auth(server='ldap',
 
 
             con.unbind()
+                        
+            adoDB_nip_groups.insert_groups(db, username, result['memberOf'])
             
             return True
         except ldap.INVALID_CREDENTIALS as e:

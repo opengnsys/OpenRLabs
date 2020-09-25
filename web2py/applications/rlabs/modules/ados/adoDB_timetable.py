@@ -17,6 +17,9 @@ def get_timetable_query(db):
 def get_timetable(db):
     return db(db.labs_timetable.id>0).select()
 
+def get_timetable_order_cod(db):
+    return db(db.labs_timetable.id>0).select(orderby='cod_asign')
+
 def set_requires(db, labs_set):
     db.labs_timetable.lab_id.requires = IS_IN_SET(labs_set) 
     db.labs_timetable.id.readable = False

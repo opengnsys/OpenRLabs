@@ -147,7 +147,7 @@ def timetable():
     grid = SQLFORM.grid(adoDB_timetable.get_timetable_query(db), maxtextlength=500,
                         fields = [db.labs_timetable.lab_name, 
                                   db.labs_timetable.Init_Day, db.labs_timetable.End_Day,
-                                  db.labs_timetable.Init_time,db.labs_timetable.End_time],
+                                  db.labs_timetable.Init_time,db.labs_timetable.End_time, db.labs_timetable.cod_asign],                        
                         csv=False, details=False, paginate = 10)
     
 

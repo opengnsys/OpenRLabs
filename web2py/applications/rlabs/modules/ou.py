@@ -15,7 +15,7 @@ import datetime
 
 from http_requests import HttpRequest, NotUsingPoolManagerConnector
 from ognsys_actions import GetLabsOu
-from ados import adoDB_ous, adoDB_timetable
+from ados import adoDB_ous, adoDB_timetable, adoDB_nip_groups
 
 
 def get_ou_credentials(db, ou_id):    
@@ -72,25 +72,41 @@ def __check_in_time(lab_time):
             return False
     else:
         return False
+    
+def __check_code_in_groups(db, lab, username):
+    if lab['cod_asign'] and len(lab['cod_asign']) > 0:                
+        groups = adoDB_nip_groups.get_groups(db, username)        
+        if groups and "_" + lab['cod_asign'] in groups:
+            return True
+        else:
+            return False
+    else:
+        return True 
+
 ###
 # By default all labs "inremote" are listed but if there any lab record in timetable
-# check that is in time range 
+# check that is in time range and the code.
 #
 ###
-def filter_labs_by_time(db, labs):
+def filter_labs_by_time_and_code(db, labs, username):    
     lab_in_time = []
-    timetable = adoDB_timetable.get_timetable(db)
+    timetable = adoDB_timetable.get_timetable_order_cod(db)
+    
     
     for lab in labs:        
         exist_in_timetable = False
+        insert_lab = True
         
-        for lab_time in timetable:
-            if lab['id'] == lab_time['lab_id']:
-                exist_in_timetable = True
-                if __check_in_time(lab_time):
-                    lab_in_time.append(lab)   
-                                 
-        if exist_in_timetable == False:
-                lab_in_time.append(lab)
-                
+        for lab_timetable in timetable:
+            if lab['id'] == lab_timetable['lab_id']:                        
+                insert_lab = False                
+                if __check_in_time(lab_timetable):                    
+                    if __check_code_in_groups(db, lab_timetable, username):
+                        insert_lab = True
+                        break                    
+                                    
+        if insert_lab:
+            lab_in_time.append(lab)
+        
     return lab_in_time
+

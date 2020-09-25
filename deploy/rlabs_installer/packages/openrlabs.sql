@@ -349,7 +349,8 @@ CREATE TABLE public.labs_timetable (
     "Init_Day" integer NOT NULL,
     "End_Day" integer NOT NULL,
     "Init_time" time without time zone NOT NULL,
-    "End_time" time without time zone NOT NULL
+    "End_time" time without time zone NOT NULL,
+    cod_asign character varying
 );
 
 
@@ -375,6 +376,41 @@ ALTER TABLE public.labs_timetable_id_seq OWNER TO openrlabs;
 --
 
 ALTER SEQUENCE public.labs_timetable_id_seq OWNED BY public.labs_timetable.id;
+
+
+--
+-- Name: nip_groups; Type: TABLE; Schema: public; Owner: openrlabs
+--
+
+CREATE TABLE public.nip_groups (
+    id integer NOT NULL,
+    nip character varying(128) NOT NULL,
+    groups text NOT NULL
+);
+
+
+ALTER TABLE public.nip_groups OWNER TO openrlabs;
+
+--
+-- Name: nip_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: openrlabs
+--
+
+CREATE SEQUENCE public.nip_groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.nip_groups_id_seq OWNER TO openrlabs;
+
+--
+-- Name: nip_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: openrlabs
+--
+
+ALTER SEQUENCE public.nip_groups_id_seq OWNED BY public.nip_groups.id;
 
 
 --
@@ -589,6 +625,13 @@ ALTER TABLE ONLY public.labs_timetable ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: nip_groups id; Type: DEFAULT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.nip_groups ALTER COLUMN id SET DEFAULT nextval('public.nip_groups_id_seq'::regclass);
+
+
+--
 -- Name: openRLabs_setup id; Type: DEFAULT; Schema: public; Owner: openrlabs
 --
 
@@ -686,6 +729,22 @@ ALTER TABLE ONLY public.auth_user
 
 ALTER TABLE ONLY public.labs_timetable
     ADD CONSTRAINT labs_timetable_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: nip_groups nip_groups_nip_unique; Type: CONSTRAINT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.nip_groups
+    ADD CONSTRAINT nip_groups_nip_unique UNIQUE (nip);
+
+
+--
+-- Name: nip_groups nip_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.nip_groups
+    ADD CONSTRAINT nip_groups_pkey PRIMARY KEY (id);
 
 
 --

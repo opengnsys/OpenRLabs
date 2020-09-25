@@ -51,8 +51,8 @@ def labs():
     
     if opengnsys.set_apikey(request.post_vars.ou_id):
         
-        labs_on = ou.get_labs_on(request.post_vars.ou_id)
-        labs_in_time = ou.filter_labs_by_time(db, labs_on)
+        labs_on = ou.get_labs_on(request.post_vars.ou_id)        
+        labs_in_time = ou.filter_labs_by_time_and_code(db, labs_on, auth.user['username'])
 
         return json.dumps(labs_in_time)
     
