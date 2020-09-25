@@ -59,5 +59,5 @@ def update_default_server(row_info, row_values):
 db.pop3_servers._after_insert.append(lambda row, id: insert_default_server(row, id))
 db.pop3_servers._after_update.append(lambda row_info, row_values: update_default_server(row_info, row_values))
 
-
+    
    

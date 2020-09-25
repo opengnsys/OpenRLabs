@@ -33,3 +33,5 @@ def getSetup_OpenRLabs(db):
 def get_auth_method_values(table_auth_name, db):
     return db(db[table_auth_name].id > 0).select().first()
 
+def get_auth_method(db):
+    return (db(db.openRLabs_setup.id > 0).select().first()['auth_mode'])    
