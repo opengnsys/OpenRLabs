@@ -53,8 +53,12 @@ def labs():
         
         labs_on = ou.get_labs_on(request.post_vars.ou_id)        
         labs_in_time = ou.filter_labs_by_time_and_code(db, labs_on, auth.user['username'])
-
-        return json.dumps(labs_in_time)
+        
+        if labs_in_time and len(labs_in_time) > 0:
+            return json.dumps(labs_in_time)
+        else:
+            return json.dumps({'error': 
+                          "No tiene laboratorios disponibles en este horario."})
     
     else:
         return json.dumps({'error': 

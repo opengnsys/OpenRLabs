@@ -75,13 +75,14 @@ def __check_in_time(lab_time):
     
 def __check_code_in_groups(db, lab, username):
     if lab['cod_asign'] and len(lab['cod_asign']) > 0:                
-        groups = adoDB_nip_groups.get_groups(db, username)        
+        groups = adoDB_nip_groups.get_groups(db, username)    
         if groups and "_" + lab['cod_asign'] in groups:
             return True
         else:
             return False
     else:
         return True 
+    
 def __check_using_AD(db):
     if adoDB_openRlabs_setup.get_auth_method(db) == 'active_directory':
         return True
@@ -106,17 +107,19 @@ def filter_labs_by_time_and_code(db, labs, username):
         insert_lab = True
         
         for lab_timetable in timetable:
-            if lab['id'] == lab_timetable['lab_id']:                              
-                insert_lab = False                
+            if lab['id'] == lab_timetable['lab_id']:                                                              
                 if __check_in_time(lab_timetable):                                     
                     if __check_using_AD(db):
                         if __check_code_in_groups(db, lab_timetable, username):
                             insert_lab = True
                             break
                         else:
+                            insert_lab = False
                             break               
                     else:
                         insert_lab = True
+                else:
+                    insert_lab = False
                         
         if insert_lab and lab not in lab_in_time:
             lab_in_time.append(lab)
