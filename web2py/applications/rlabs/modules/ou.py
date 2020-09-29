@@ -76,7 +76,7 @@ def __check_in_time(lab_time):
 def __check_code_in_groups(db, lab, username):
     if lab['cod_asign'] and len(lab['cod_asign']) > 0:                
         groups = adoDB_nip_groups.get_groups(db, username)    
-        if groups and "_" + lab['cod_asign'] in groups:
+        if groups and lab['cod_asign'] in groups:
             return True
         else:
             return False
