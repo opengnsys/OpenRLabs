@@ -64,13 +64,28 @@ def get_labs_on(ou_id):
 
 def __check_in_time(lab_time):
     today = datetime.datetime.today().weekday()
-    if lab_time['Init_Day'] <= today and  today <= lab_time['End_Day']:
+    if lab_time['Init_Day'] <= today <= lab_time['End_Day']:        
         now = datetime.datetime.now().time()        
-        if lab_time['Init_time'] <= now and now <= lab_time['End_time']:
-            return True
+        #dummy_time = datetime.datetime.strptime("22:05:00", '%H:%M:%S').time()
+        #print(dummy_time)
+        #now = dummy_time
+        ## Si ini > fin; fin pertenece al día siguiente.
+        if lab_time['Init_time'] > lab_time['End_time']:            
+            if (lab_time['End_time'] < now < lab_time['Init_time']) :
+                #print('bad time')
+                return False                
+            else:
+                #print('ok time')
+                return True
         else:
-            return False
+            if lab_time['Init_time'] <= now <= lab_time['End_time']:
+                #print('ok time')
+                return True                
+            else:
+                #print('bad time')
+                return False            
     else:
+        #print('bad day')
         return False
     
 def __check_code_in_groups(db, lab, username):
@@ -107,18 +122,23 @@ def filter_labs_by_time_and_code(db, labs, username):
         insert_lab = True
         
         for lab_timetable in timetable:
-            if lab['id'] == lab_timetable['lab_id']:                                                              
-                if __check_in_time(lab_timetable):                                     
+            if lab['id'] == lab_timetable['lab_id']:
+                print(lab_timetable)                                                              
+                if __check_in_time(lab_timetable):
+                    print('in time')                                
                     if __check_using_AD(db):
                         if __check_code_in_groups(db, lab_timetable, username):
+                            print('code ok')
                             insert_lab = True
                             break
                         else:
+                            print('bad code')
                             insert_lab = False
                             break               
                     else:
                         insert_lab = True
                 else:
+                    print('Not in time')
                     insert_lab = False
                         
         if insert_lab and lab not in lab_in_time:
