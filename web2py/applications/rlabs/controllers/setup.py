@@ -152,7 +152,7 @@ def timetable():
                         fields = [db.labs_timetable.lab_name, 
                                   db.labs_timetable.Init_Day, db.labs_timetable.End_Day,
                                   db.labs_timetable.Init_time,db.labs_timetable.End_time, db.labs_timetable.cod_asign],                        
-                        csv=False, details=False, paginate = 10)
+                        orderby=db.labs_timetable.lab_name,csv=False, details=False, paginate = 10)
     
 
     if request.args:
