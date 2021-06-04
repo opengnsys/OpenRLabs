@@ -1,0 +1,101 @@
+OpenRLabs v1.1.1 - 04 Junio 2021 - Copyright 2020 David Fuertes.
+
+
+INTRODUCCIÓN
+
+Aplicación Open Source, que utiliza la funcionalidad ofrecida 
+por opengnsys a traves de su API REST para el acceso a escritorio 
+remoto mediante un navegador web.
+
+Este paquete contiene el fichero de despligue de contendores docker
+mediante la aplicación docker-compose.
+
+La instalación ha sido testada en Ubuntu Server 20.04 Y 18.04.
+Debería ser compatible con cualquier S.O. Linux con docker.
+
+PRE-REQUISITOS.
+
+  - Tener instalado docker y docker-compose.
+
+	Para sistemas con apt:	apt update && apt install docker docker-compose
+
+
+INSTALACION.
+
+Ejecutar el instalador con privilegios de root:
+
+	sudo ./install.sh
+
+POST-INSTALACION.
+
+A fin de simplificar el proceso de instalación, el instalador ejecuta
+docker como usuario root. 
+
+Si por motivos de seguridad desea ejecutar docker con otro usuario,
+será necesario que el usario a utilizar sea mienbro del grupo docker.    
+	
+	 sudo usermod -aG docker $USER
+
+NOTA: Habrá que reiniciar la sesión para que se haga efectiva la 
+pertenencia al grupo docker.
+
+DESINSTALACION.
+
+El proceso de desinstalación provoca la perdida de los datos de los contenedores.
+
+Se recomienda exportar los datos de los usuarios para evitar su perdida. 
+
+Ejecutar:
+	./uninstall.sh
+
+
+PROBLEMAS DETECTADOS Y LIMITACIONES.
+
+La aplicación funciona correctamente con
+el navegador Google Chrome.
+
+Puede funcionar también en Mozilla Firefox,
+pero se recomienda leer en el WIKI -> FAQs las
+medidas a tener en cuenta.
+
+En otros navegadores no ha sido testado.
+
+
+WIKI
+
+Toda la documentación es encuentra en:
+
+wiki.openrlabs.es
+
+
+CONTACTO
+
+<dfuertes@unizar.es>
+<jcgarcia@unizar.es>
+
+
+DETALLES DE LA LICENCIA
+
+
+openrlabs is released under the GNU General Public License,
+version 3 or later. See file "COPYING" for full license text.
+
+In compliance with the terms of the GPL, a full source distribution 
+(openrlabs and all included libraries) is available at 
+<http://openrlabs.es>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+

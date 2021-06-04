@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# web2py_source
+web2py_source/
+
+# web2py
+web2py/**
+!web2py/applications/rlabs
+web2py/applications/rlabs/**/*.py[cod]
+web2py/applications/rlabs/**/*$py.class
+
+# rlabs
+cache/**
+databases/**
+errors/**
+sessions/**
+.settings/**
+*˜
+*.pyc
+*.bak
+*.log
+.project
+.pydevproject
+
+# Guacamole
+guacamole-websocket/.idea
+guacamole-websocket/target/**
+
+
+# Other files
+*.tar.gz
+*.bak
+*.log
+
+#deploy
+!deploy/rlabs_installer/packages/**

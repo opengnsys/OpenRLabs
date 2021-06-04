@@ -1,0 +1,16 @@
+{{extend 'layout.html'}}
+<script type="text/javascript">
+	var error = "{{=error}}"
+	console.log(error)
+	if ( error !== "null" ) {
+		alert(error);
+	}
+</script>
+	
+<link href="{{=URL('static', 'css/setup.css')}}" rel="stylesheet"	type="text/css" />
+
+ <div class="container_setup">
+	 <div class="menu_config">
+	 {{include 'setup/menu.html'}} 
+	</div>
+</div>

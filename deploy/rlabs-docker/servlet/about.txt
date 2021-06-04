@@ -1,0 +1,7 @@
+NOTA: David Fuetes 25/05/2021
+
+  Esta version de servlet toma como parámetro el nombre del servicio de guacd. 
+ 
+  Esto permitira en futuras actualizaciones especificar en tiempo de ejecución el nombre del servicio docker de
+  guacamole.
+

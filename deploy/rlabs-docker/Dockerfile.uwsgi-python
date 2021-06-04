@@ -1,0 +1,36 @@
+FROM python:3
+
+
+ENV TZ=Europe/Madrid
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN groupadd -r openrlabs && useradd -r -g openrlabs openrlabs
+
+
+ADD ./web2py-rlabs /var/www/web2py
+ADD ./openrlabs_init.cfg /var/www/web2py/setup_init.cfg
+ADD ./uwsgi-python/uwsgi-web2py.ini /etc/uwsgi/sites/web2py.ini
+ADD ./web2py-rlabs/applications/rlabs/scripts/clear_fs_sessions.sh /etc/cron.daily/clear_fs_sessions.sh
+
+RUN chmod -R 777 /var/www/web2py/logs
+RUN chmod -R 777 /var/www/web2py/applications/rlabs/sessions
+
+
+WORKDIR /home/openrlabs
+
+RUN chown -R openrlabs:openrlabs /home/openrlabs
+
+RUN apt-get update &&  apt-get install -y \
+	libldap-dev \
+	libsasl2-dev
+
+USER openrlabs
+
+COPY ./uwsgi-python/requirements.txt .
+
+RUN pip install --upgrade pip
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["/home/openrlabs/.local/bin/uwsgi", "--ini", "/etc/uwsgi/sites/web2py.ini", "--die-on-term"]
+

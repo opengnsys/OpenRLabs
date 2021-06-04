@@ -1,0 +1,99 @@
+version: '3'
+
+#App services
+services:
+
+  #App server
+  web2py-uwsgi:
+   image: web2py-uwsgi
+   container_name: web2py-uwsgi
+   restart: unless-stopped
+   build:
+     context: .
+     dockerfile: ./Dockerfile.uwsgi-python
+   depends_on:
+     - db
+   tty: true
+
+   networks:
+     - private-network
+
+  #Nginx Service 
+  webserver:
+    image: nginx
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 80:80
+      - 443:443
+      - 8020:8020
+
+    volumes:
+      - ./nginx/conf.d/web2py:/etc/nginx/conf.d/nginx.conf
+      - ./nginx/ssl/:/etc/nginx/ssl/
+      - ./web2py-rlabs:/var/www/web2py
+        
+    depends_on:
+      - web2py-uwsgi
+
+    networks:
+      - private-network
+
+  #Apache Tomcat Service
+  java-server:
+    image: tomcat:8
+    container_name: tomcat
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./servlet/websocket.war:/usr/local/tomcat/webapps/websocket.war
+
+    networks:
+      - private-network
+
+  #Guacamole service
+  guacamole-server:
+    image: guacamole/guacd
+    container_name: guacd
+    restart: unless-stopped
+    tty: true
+
+    networks:
+      - private-network
+
+      
+  #Postgres Service
+  db:
+    image: postgres:10
+    container_name: postgres
+    restart: unless-stopped
+    tty: true
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/openrlabs.sql:/tmp/openrlabs.sql
+      - ./postgres/10-create-db-openrlabs.sh:/docker-entrypoint-initdb.d/10-create-db-openrlabs.sh
+
+    environment:
+      - POSTGRES_DB=openrlabs
+      - POSTGRES_USER=openrlabs
+      - POSTGRES_PASSWORD=openrlabs
+        
+    command: postgres -c datestyle='iso, dmy'
+
+    networks:
+      - private-network
+
+#Docker Networks
+networks:
+  private-network:
+    driver: bridge
+
+#Volumes
+volumes:
+ postgres-data:
+         driver: local     
+  
+
+
