@@ -92,7 +92,7 @@ def fileimport():
 def manage():
     if request.args and request.args[0] == 'edit':
             if adoDB_users.is_admin(db, request.args[2]):
-                adoDB_users.enable_passwd_readable(db)
+                adoDB_users.enable_passwd_readable(db)                
             else:
                 adoDB_users.disable_passwd_readable(db)
 
@@ -121,6 +121,14 @@ def manage():
                                        font-size: 0.8em; font-weight: normal; \
                                        vertical-align: top;"))
            
+    
+    form = grid.element('.web2py_form')
+    if form:
+        password_input = form.element('input',_id='auth_user_password')
+        if password_input:
+            password_input['_type'] = 'text'
+    
+
     return dict(grid=grid)
 
 @auth.requires_membership('admin')
