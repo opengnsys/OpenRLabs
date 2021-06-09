@@ -20,7 +20,7 @@ from lab import Lab
 from client_lab import Client
 from reserves import ActiveReserves
 import ou
-from  ados import adoDB_services, adoDB_active_reserves, adoDB_openRlabs_setup
+from  ados import adoDB_services, adoDB_reserves, adoDB_openRlabs_setup
 import connector
 
 
@@ -67,7 +67,7 @@ def labs():
                           "Error de acceso. Por favor compruebe configuración de usuario y contraseña de la OU"})
 
 def __user_has_reserve():
-    active_reserves=adoDB_active_reserves.get(db, auth.user_id)
+    active_reserves=adoDB_reserves.get(db, auth.user_id)
     if len(active_reserves) > 0:
         return True
     else:

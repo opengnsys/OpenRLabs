@@ -11,8 +11,9 @@
 #################################################################################
 import gluon 
 
-from ados import adoDB_users, adoDB_services, adoDB_openRlabs_setup, adoDB_timetable
+from ados import adoDB_users, adoDB_services, adoDB_openRlabs_setup, adoDB_timetable, adoDB_prereserves
 from ognsys import Ognsys
+from lab import Lab
 import import_users
 
 
@@ -67,6 +68,42 @@ def auth_setup():
                               
     return dict(form=form)
 
+@auth.requires_membership('admin')
+def prereserves():
+    
+    opengnsys = Ognsys(db)
+    
+    labs = opengnsys.get_labs()
+    labs_set = {}
+    max_hosts_lab = {}
+    for ou_name, labs_ou in labs.items():                
+        for lab in labs_ou:                        
+            if 'id' in lab:                
+                total_clients = Lab(lab['ou']['id'],lab['id']).get_total_clients()
+                labs_set.update({lab['id'] : lab['name'] + ' (' + ou_name + ')'})
+                max_hosts_lab.update({lab['id'] : total_clients })
+                
+    adoDB_prereserves.set_requires(db, labs_set)
+
+    grid = SQLFORM.grid(adoDB_prereserves.get_query_reserves(db),
+                        csv=False, maxtextlength=500,
+                        details=False, deletable=True, paginate = 10)
+
+    if request.args:
+        if request.args[0] == 'new' or request.args[0] == 'edit':
+            lab_name_input = grid.element('#pre_reserves_lab_name')
+            grid.element('#pre_reserves_num_reserves')['_type'] = "number"
+            grid.element('#pre_reserves_num_reserves')['_min'] = "1"
+
+            grid.element('#pre_reserves_init_time')['_required'] = "required"
+            grid.element('#pre_reserves_finish_time')['_required'] = "required"
+
+            grid.element('#pre_reserves_lab_name')['_readonly'] = 'readonly'
+            grid.element('#pre_reserves_lab_id')['_onchange'] = 'set_lab_name(event)'
+
+    
+    return dict(grid=grid, max_hosts_lab=max_hosts_lab)
+    
 @auth.requires_membership('admin')
 def ous():    
     opengnsys = Ognsys(db)
@@ -186,3 +223,4 @@ def timetable():
         
         
     return dict(grid=grid)
+

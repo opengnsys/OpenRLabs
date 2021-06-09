@@ -24,7 +24,7 @@ filename = "applications/" + APP + "/controllers/default.py"
 exec(compile(open(filename, "rb").read(), filename, 'exec'), globals())
 
 #import global_context
-#import adoDB_active_reserves
+#import adoDB_reserves
 from gluon.storage import Storage
 
 class GlobalContext(BaseTest):
@@ -109,7 +109,7 @@ class GlobalContext(BaseTest):
                                    expiration_time = '08/04/2020 13:20:26')
                                    
         global_context.add_context(db = db)
-        adoDB_active_reserves.insert(global_context)
+        adoDB_reserves.insert(global_context)
     '''
     
 suite = unittest.TestSuite()

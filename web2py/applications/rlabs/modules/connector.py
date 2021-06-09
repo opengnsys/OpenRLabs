@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 import time
 
 from client_lab import Client
-from ados import adoDB_active_reserves, adoDB_openRlabs_setup
+from ados import adoDB_reserves, adoDB_openRlabs_setup
 import errors
 
 
@@ -58,7 +58,7 @@ class Connection:
                 
                 print('insert reserva')
                 try:           
-                    adoDB_active_reserves.insert(self.my_context)
+                    adoDB_reserves.insert(self.my_context)
                 except:
                     print(equipo_reservado)
                     return {'error': '\n Error de reserva. No es posible registrar reserva en openrlabs'}

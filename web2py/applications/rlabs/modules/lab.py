@@ -160,3 +160,5 @@ class Lab:
                                              'disponibles': pcs_disponibles}
                     }        
         
+    def get_total_clients(self):
+        return len(self.__get_clients())

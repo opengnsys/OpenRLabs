@@ -19,7 +19,7 @@ from gluon.storage import Storage
 
 from ognsys import Ognsys
 from client_lab import Client
-from ados import adoDB_active_reserves
+from ados import adoDB_reserves
 
 def getEventsLogin():
     print('Evento producido: login')

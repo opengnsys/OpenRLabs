@@ -15,7 +15,7 @@ from http_requests import HttpRequest, UsingPoolManagerConnector, NotUsingPoolMa
 from ognsys_actions import GetStatusClient, ReserveClient, RedirectEvents, RegisterSessionTimeout, UnreserveClient
 
 import ognsys_globals
-from ados import adoDB_active_reserves
+from ados import adoDB_reserves
 
 class Client:
     
@@ -75,6 +75,6 @@ class Client:
         
     def remove_active_reserve(self):
 
-        adoDB_active_reserves.remove_by_pc_id(self.context.db, self.context.pc_id)
+        adoDB_reserves.remove_by_pc_id(self.context.db, self.context.pc_id)
         return "ok"
         

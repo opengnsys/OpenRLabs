@@ -14,7 +14,7 @@
 from gluon.storage import Storage
 
 from client_lab import Client
-from ados import adoDB_active_reserves
+from ados import adoDB_reserves
 
 class ActiveReserves:
     def __init__(self, db, user_id,  user_groups):        
@@ -28,9 +28,9 @@ class ActiveReserves:
     def __set_reserves(self):
 
         if 'admin' in  self.user_groups:
-            active_reserves = adoDB_active_reserves.getAll(self.db)
+            active_reserves = adoDB_reserves.getAll(self.db)
         else:
-            active_reserves = adoDB_active_reserves.get(self.db, self.user_id)   
+            active_reserves = adoDB_reserves.get(self.db, self.user_id)   
         
         # Render() for get user_name from id (See represent clause in model).
         # return Iterator object        
