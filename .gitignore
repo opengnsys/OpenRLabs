@@ -37,3 +37,6 @@ guacamole-websocket/target/**
 
 #deploy
 !deploy/rlabs_installer/packages/**
+
+#docker-images-deploy
+docker-images/**

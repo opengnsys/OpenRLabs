@@ -9,6 +9,9 @@
 # @version 1.1.0 - First version
 # @date    2019-15-11
 #################################################################################
+from threading import current_thread
+import json
+
 import gluon 
 
 from ados import adoDB_users, adoDB_services, adoDB_openRlabs_setup, adoDB_timetable, adoDB_prereserves
@@ -69,21 +72,36 @@ def auth_setup():
     return dict(form=form)
 
 @auth.requires_membership('admin')
+def get_images_lab():    
+    current_lab = Lab(request.vars['ou_id'],request.vars['lab_id'])
+    clients = current_lab.get_remote_clients()
+
+    return json.dumps(clients['images_info'])
+
+@auth.requires_membership('admin')
 def prereserves():
     
     opengnsys = Ognsys(db)
     
-    labs = opengnsys.get_labs()
+    labs = opengnsys.get_labs()    
     labs_set = {}
     max_hosts_lab = {}
+    lab_ous = {}
     for ou_name, labs_ou in labs.items():                
-        for lab in labs_ou:                        
-            if 'id' in lab:                
-                total_clients = Lab(lab['ou']['id'],lab['id']).get_total_clients()
+        for lab in labs_ou:            
+            if 'id' in lab:
+                current_lab = Lab(lab['ou']['id'],lab['id'])              
+                total_clients = current_lab.get_total_clients()                                
                 labs_set.update({lab['id'] : lab['name'] + ' (' + ou_name + ')'})
                 max_hosts_lab.update({lab['id'] : total_clients })
+                lab_ous.update({lab['id'] : lab['ou']['id'] })                
                 
-    adoDB_prereserves.set_requires(db, labs_set)
+    adoDB_prereserves.set_readable_id(db, False)
+
+    if request.args:
+        if request.args[0] == 'new':
+            adoDB_prereserves.set_requires_lab_id(db, labs_set)            
+            adoDB_prereserves.set_requires_image_name(db)
 
     grid = SQLFORM.grid(adoDB_prereserves.get_query_reserves(db),
                         csv=False, maxtextlength=500,
@@ -91,18 +109,33 @@ def prereserves():
 
     if request.args:
         if request.args[0] == 'new' or request.args[0] == 'edit':
+
             lab_name_input = grid.element('#pre_reserves_lab_name')
+
             grid.element('#pre_reserves_num_reserves')['_type'] = "number"
             grid.element('#pre_reserves_num_reserves')['_min'] = "1"
 
-            grid.element('#pre_reserves_init_time')['_required'] = "required"
-            grid.element('#pre_reserves_finish_time')['_required'] = "required"
 
+            grid.element('#pre_reserves_init_time')['_required'] = "required"
+            grid.element('#pre_reserves_init_time')['_type'] = "datetime-local"
+            grid.element('#pre_reserves_finish_time')['_required'] = "required"
+            grid.element('#pre_reserves_finish_time')['_type'] = "datetime-local"
+            grid.element('#pre_reserves_finish_time')['_onchange'] = "check_min_finish_time(event)"            
+            
             grid.element('#pre_reserves_lab_name')['_readonly'] = 'readonly'
             grid.element('#pre_reserves_lab_id')['_onchange'] = 'set_lab_name(event)'
 
+            grid.element('#pre_reserves_ou_id__row')['_style'] = "display: none;"
+
+            grid.element('#pre_reserves_image_name')['_onchange'] = 'set_image_id(event)'
+            grid.element('#pre_reserves_image_id__row')['_style'] = "display: none;"            
+
+        if request.args[0] == 'edit':
+            grid.element('#pre_reserves_lab_id__row')['_style'] = "display: none;"
+
+
     
-    return dict(grid=grid, max_hosts_lab=max_hosts_lab)
+    return dict(grid=grid, max_hosts_lab=max_hosts_lab, lab_ous=lab_ous)
     
 @auth.requires_membership('admin')
 def ous():    

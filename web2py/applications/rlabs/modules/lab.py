@@ -88,7 +88,10 @@ class Lab:
             return image_info["inremotepc"]
         else:
             return False
-            
+
+    def get_available_images(self):
+        pass
+
     def get_remote_clients(self):
 
         PCs =  self.__get_clients()
