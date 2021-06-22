@@ -24,6 +24,10 @@ def get_authentication_setup(auth_method, db):
 def get_maxtime_reserve(db):
     return (db(db.openRLabs_setup.id > 0).select().first()['maxtime_reserve'])
 
+def get_seconds_to_wait_reserve(db):
+    return (db(db.openRLabs_setup.id > 0).select().first()['seconds_to_wait'])
+
+
 def getSetup_OpenRLabs_table(db):
     return db.openRLabs_setup
 

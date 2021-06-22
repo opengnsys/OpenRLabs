@@ -65,16 +65,12 @@ class Client:
         return self.http_request.do_action(UnreserveClient(self.context['ou_id'], self.context['lab_id'], self.context['pc_id']))
         
     
-    def unreserve_remote_pc(self):
-        
-        self.remove_active_reserve()
-        
-        unreserve_ognsys = self.__unreserve_remote_pc()                
-        
+    def unreserve_remote_pc(self):        
+        self.remove_active_reserve()        
+        unreserve_ognsys = self.__unreserve_remote_pc()                        
         return unreserve_ognsys
         
     def remove_active_reserve(self):
-
         adoDB_reserves.remove_by_pc_id(self.context.db, self.context.pc_id)
         return "ok"
         

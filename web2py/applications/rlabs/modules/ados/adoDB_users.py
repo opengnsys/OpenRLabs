@@ -30,6 +30,15 @@ def remove_users(db,users_id):
         
         db.commit()
     
+def get_admin_id(db):    
+    result = db( (db.auth_group.role == 'admin') &
+            (db.auth_membership.group_id == db.auth_group.id) &
+            (db.auth_user.id == db.auth_membership.user_id) ).select(orderby=db.auth_user.id).first()
+    if result:
+        return result['auth_user']['id']
+    else:
+        return None
+
 def is_admin(db, user_id):
     r = db( (db.auth_group.role == 'admin') &
             (db.auth_membership.group_id == db.auth_group.id) &

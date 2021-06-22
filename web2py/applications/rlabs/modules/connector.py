@@ -53,9 +53,13 @@ class Connection:
                 expiration_time = datetime.now() + timedelta(hours=
                                                              int(self.my_context.maxtime))
                 expiration_time = expiration_time.strftime('%d/%m/%Y %H:%M:%S')
-                
+                            
                 self.my_context.expiration_time = expiration_time
-                
+
+                self.my_context.reserved_init_time = datetime.now()
+                self.my_context.assigned_init_time = datetime.now()
+                self.my_context.is_assigned = True
+
                 print('insert reserva')
                 try:           
                     adoDB_reserves.insert(self.my_context)
@@ -134,6 +138,10 @@ class Connection:
                        'client_type': client_type,
                        'status' : '\n Conexión realizada con éxito.'}
         else:        
+    
+
+            client = Client(my_context)
+            client.unreserve_remote_pc()
                          
             return {'error': 'Fallo al encender el equipo de forma remota.\n Intentelo con otro equipo.'}
           

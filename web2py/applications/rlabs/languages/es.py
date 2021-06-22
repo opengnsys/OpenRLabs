@@ -386,6 +386,7 @@
 'Profile': 'Perfil',
 'Profile updated': 'Perfil actualizado',
 'Properties': 'Propiedades',
+'Protocol': 'Protocol',
 'pygraphviz library not found': 'Libreria pygraphviz no encontrada',
 'Python': 'Python',
 'Query Not Supported: %s': 'Consulta No Soportada: %s',

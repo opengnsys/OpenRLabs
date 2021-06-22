@@ -14,3 +14,6 @@ def get_services_query(db):
 
 def get_services(db):
     return db(db.services.id>0).select()
+
+def get_service_by_id(db, id):
+    return db(db.services.id == 1).select().first()

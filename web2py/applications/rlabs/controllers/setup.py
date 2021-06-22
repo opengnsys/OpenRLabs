@@ -94,8 +94,8 @@ def prereserves():
                 total_clients = current_lab.get_total_clients()                                
                 labs_set.update({lab['id'] : lab['name'] + ' (' + ou_name + ')'})
                 max_hosts_lab.update({lab['id'] : total_clients })
-                lab_ous.update({lab['id'] : lab['ou']['id'] })                
-                
+                lab_ous.update({lab['id'] : lab['ou']['id'] })
+
     adoDB_prereserves.set_readable_id(db, False)
 
     if request.args:
@@ -135,7 +135,8 @@ def prereserves():
 
 
     
-    return dict(grid=grid, max_hosts_lab=max_hosts_lab, lab_ous=lab_ous)
+    return dict(grid=grid, max_hosts_lab=max_hosts_lab, 
+                lab_ous=lab_ous)
     
 @auth.requires_membership('admin')
 def ous():    
