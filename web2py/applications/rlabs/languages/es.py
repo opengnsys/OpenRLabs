@@ -292,6 +292,7 @@
 'Languages': 'Lenguajes',
 'languages': 'lenguajes',
 'languages updated': 'lenguajes actualizados',
+'Last Check Time': 'Last Check Time',
 'Last name': 'Apellido',
 'Last saved on:': 'Guardado en:',
 'Layout': 'Diseño de página',

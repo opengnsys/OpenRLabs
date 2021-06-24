@@ -103,6 +103,7 @@ def prereserves():
             adoDB_prereserves.set_requires_lab_id(db, labs_set)            
             adoDB_prereserves.set_requires_image_name(db)
 
+
     grid = SQLFORM.grid(adoDB_prereserves.get_query_reserves(db),
                         csv=False, maxtextlength=500,
                         details=False, deletable=True, paginate = 10)
@@ -128,7 +129,8 @@ def prereserves():
             grid.element('#pre_reserves_ou_id__row')['_style'] = "display: none;"
 
             grid.element('#pre_reserves_image_name')['_onchange'] = 'set_image_id(event)'
-            grid.element('#pre_reserves_image_id__row')['_style'] = "display: none;"            
+            grid.element('#pre_reserves_image_id__row')['_style'] = "display: none;"
+
 
         if request.args[0] == 'edit':
             grid.element('#pre_reserves_lab_id__row')['_style'] = "display: none;"

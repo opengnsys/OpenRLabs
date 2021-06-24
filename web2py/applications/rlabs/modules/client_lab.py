@@ -11,6 +11,8 @@
 # @date    2019-15-11
 #################################################################################
 
+from gluon.storage import Storage
+
 from http_requests import HttpRequest, UsingPoolManagerConnector, NotUsingPoolManagerConnector
 from ognsys_actions import GetStatusClient, ReserveClient, RedirectEvents, RegisterSessionTimeout, UnreserveClient
 
@@ -20,11 +22,19 @@ from ados import adoDB_reserves
 class Client:
     
     def __init__(self, my_context):
-        self.context = my_context
+
+        self.context = Storage()
+
+
+        # Rellenamos context
+        for k,v in my_context.items():
+            self.context[k] = v  
         
+
         self.http_request = HttpRequest()
  
     
+
     def update_context(self, *args):
         if args:
             for arg in args:

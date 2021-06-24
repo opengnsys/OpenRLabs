@@ -166,7 +166,7 @@ class RedirectEvents(OgnsysAction):
                                                                             "&lab_id=" + lab_id + \
                                                                             "&ou_id=" + ou_id + \
                                                                             "&maxtime=" + maxtime                                                                           
-                                                                                                                                                        
+        
         body = {
                   "urlLogin": urlogin,
                   "urlLogout": urlogout
@@ -188,7 +188,7 @@ class RegisterSessionTimeout(OgnsysAction):
         maxtime = str(maxtime)
         
         deadLine = str(int(maxtime) * 60 * 60)    
-        
+
         body ={
              "deadLine": deadLine 
         }
