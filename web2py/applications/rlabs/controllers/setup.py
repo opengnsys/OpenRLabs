@@ -17,7 +17,9 @@ import gluon
 from ados import adoDB_users, adoDB_services, adoDB_openRlabs_setup, adoDB_timetable, adoDB_prereserves
 from ognsys import Ognsys
 from lab import Lab
-import import_users
+
+from prereserves import PreReserve
+
 
 
 @auth.requires_membership('admin')
@@ -71,12 +73,25 @@ def auth_setup():
                               
     return dict(form=form)
 
+#######
+## Ajax
+#######
 @auth.requires_membership('admin')
 def get_images_lab():    
-    current_lab = Lab(request.vars['ou_id'],request.vars['lab_id'])
-    clients = current_lab.get_remote_clients()
+    if request.vars['lab_id'] != '':
+        current_lab = Lab(request.vars['ou_id'],request.vars['lab_id'])
+        clients = current_lab.get_remote_clients()        
+        if 'error' in clients:            
+            return json.dumps({'error': 'Error conexión al obtener imagenes del laboratorio. Reintentelo de nuevo.'})
+        else:
+            return json.dumps(clients['images_info'])
 
-    return json.dumps(clients['images_info'])
+def __delete_prereserve(table, id):    
+    prereserve_db = adoDB_prereserves.get_prereserve_by_id(db, id)
+    if prereserve_db:    
+        prereserve = PreReserve(db, prereserve_db)
+        prereserve.remove()
+    
 
 @auth.requires_membership('admin')
 def prereserves():
@@ -105,10 +120,11 @@ def prereserves():
 
 
     grid = SQLFORM.grid(adoDB_prereserves.get_query_reserves(db),
-                        csv=False, maxtextlength=500,
+                        csv=False, maxtextlength=500, ondelete=__delete_prereserve,
                         details=False, deletable=True, paginate = 10)
-
+    
     if request.args:
+        
         if request.args[0] == 'new' or request.args[0] == 'edit':
 
             lab_name_input = grid.element('#pre_reserves_lab_name')
@@ -130,11 +146,12 @@ def prereserves():
 
             grid.element('#pre_reserves_image_name')['_onchange'] = 'set_image_id(event)'
             grid.element('#pre_reserves_image_id__row')['_style'] = "display: none;"
+            
 
 
         if request.args[0] == 'edit':
             grid.element('#pre_reserves_lab_id__row')['_style'] = "display: none;"
-
+            grid.element('#delete_record__row')['_style'] = "display: none;"
 
     
     return dict(grid=grid, max_hosts_lab=max_hosts_lab, 
