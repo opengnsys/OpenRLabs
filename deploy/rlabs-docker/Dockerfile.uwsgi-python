@@ -10,10 +10,12 @@ RUN groupadd -r openrlabs && useradd -r -g openrlabs openrlabs
 ADD ./web2py-rlabs /var/www/web2py
 ADD ./openrlabs_init.cfg /var/www/web2py/setup_init.cfg
 ADD ./uwsgi-python/uwsgi-web2py.ini /etc/uwsgi/sites/web2py.ini
-ADD ./web2py-rlabs/applications/rlabs/scripts/clear_fs_sessions.sh /etc/cron.daily/clear_fs_sessions.sh
+ADD ./web2py-rlabs/applications/rlabs/scripts/clear_fs_sessions.sh /etc/cron.daily/clear_fs_sessions
 
 RUN chmod -R 777 /var/www/web2py/logs
 RUN chmod -R 777 /var/www/web2py/applications/rlabs/sessions
+
+
 
 
 WORKDIR /home/openrlabs
@@ -21,8 +23,12 @@ WORKDIR /home/openrlabs
 RUN chown -R openrlabs:openrlabs /home/openrlabs
 
 RUN apt-get update &&  apt-get install -y \
+	cron \
 	libldap-dev \
 	libsasl2-dev
+
+RUN echo "* * * * * root /var/www/web2py/applications/rlabs/scripts/exec_bg_check.sh" > /etc/cron.d/w2p_bg_check
+RUN echo "0 1 * * * root /var/www/web2py/applications/rlabs/scripts/clear_fs_sessions.sh" > /etc/cron.d/w2p_clear_sessions
 
 USER openrlabs
 

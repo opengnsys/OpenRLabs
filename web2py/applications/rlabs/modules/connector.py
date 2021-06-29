@@ -11,6 +11,8 @@
 #################################################################################
 from gluon import current
 
+from gluon.storage import Storage
+
 import json
 from datetime import datetime, timedelta
 import time
@@ -24,7 +26,12 @@ class Connection:
         
     def __init__(self, my_context):
 
-        self.my_context = my_context
+        self.my_context = Storage()
+
+        # Rellenamos context
+        for k,v in my_context.items():
+            self.my_context[k] = v
+        
         
         self.client = Client(self.my_context)
         
@@ -74,7 +81,7 @@ class Connection:
         equipo_reservado= None
         # Al hacer reserva se manda arrancar el equipo y se crea entrada en cola acciones para levantar el equipo
         # deseado.
-        equipo_reservado = self.client.reserve_remote_pc()
+        equipo_reservado = self.client.reserve_remote_pc()        
         print("equipo_reservado en opengnsys")
         ####
         ## COMPROBAR FORMATO RESPUESTA VALIDA Y CHEQUEAR QUE CONTIENE TODOS LOS CAMPOS NECESARIOS
@@ -85,9 +92,9 @@ class Connection:
             if equipo_reservado:                
                 for k,v in equipo_reservado.items():
                     self.my_context[k] = v
-                expiration_time = datetime.now() + timedelta(hours=
-                                                             int(self.my_context.maxtime))
-                expiration_time = expiration_time.strftime('%d/%m/%Y %H:%M:%S')
+
+                expiration_time = datetime.now() + timedelta(hours=int(self.my_context.maxtime))
+                #expiration_time = expiration_time.strftime('%d/%m/%Y %H:%M:%S')
                             
                 self.my_context.expiration_time = expiration_time
 
@@ -101,6 +108,8 @@ class Connection:
                 except:
                     print(equipo_reservado)
                     return {'error': '\n Error de reserva. No es posible registrar reserva en openrlabs'}
+                
+                self.client.update_context(self.my_context)
                 
                 print('eventos redirigidos')
                 self.client.redirect_events()

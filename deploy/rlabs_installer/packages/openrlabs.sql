@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.15 (Ubuntu 10.15-0ubuntu0.18.04.1)
--- Dumped by pg_dump version 10.15 (Ubuntu 10.15-0ubuntu0.18.04.1)
+-- Dumped from database version 10.17 (Debian 10.17-1.pgdg90+1)
+-- Dumped by pg_dump version 10.17 (Ubuntu 10.17-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -72,10 +72,10 @@ ALTER SEQUENCE public.active_directory_id_seq OWNED BY public.active_directory.i
 
 
 --
--- Name: active_reserves; Type: TABLE; Schema: public; Owner: openrlabs
+-- Name: reserves; Type: TABLE; Schema: public; Owner: openrlabs
 --
 
-CREATE TABLE public.active_reserves (
+CREATE TABLE public.reserves (
     id integer NOT NULL,
     user_id integer,
     ou_id character varying(512),
@@ -83,14 +83,20 @@ CREATE TABLE public.active_reserves (
     pc_id character varying(512),
     pc_name character varying(512),
     expiration_time timestamp without time zone,
-    ip character varying(512),
+    ip character varying(512) NOT NULL,
     protocol character varying(512),
     port character varying(512),
-    os character varying(512)
+    os character varying(512),
+    is_assigned boolean DEFAULT false NOT NULL,
+    assigned_init_time timestamp without time zone,
+    image_id character varying NOT NULL,
+    reserved_init_time timestamp without time zone NOT NULL,
+    prereserve_id integer,
+    mac character varying NOT NULL
 );
 
 
-ALTER TABLE public.active_reserves OWNER TO openrlabs;
+ALTER TABLE public.reserves OWNER TO openrlabs;
 
 --
 -- Name: active_reserves_id_seq; Type: SEQUENCE; Schema: public; Owner: openrlabs
@@ -111,7 +117,7 @@ ALTER TABLE public.active_reserves_id_seq OWNER TO openrlabs;
 -- Name: active_reserves_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: openrlabs
 --
 
-ALTER SEQUENCE public.active_reserves_id_seq OWNED BY public.active_reserves.id;
+ALTER SEQUENCE public.active_reserves_id_seq OWNED BY public.reserves.id;
 
 
 --
@@ -527,6 +533,49 @@ ALTER SEQUENCE public.pop3_servers_id_seq OWNED BY public.pop3_servers.id;
 
 
 --
+-- Name: pre_reserves; Type: TABLE; Schema: public; Owner: openrlabs
+--
+
+CREATE TABLE public.pre_reserves (
+    id integer NOT NULL,
+    lab_id integer NOT NULL,
+    lab_name character varying(518) NOT NULL,
+    init_time timestamp without time zone NOT NULL,
+    finish_time timestamp without time zone NOT NULL,
+    num_reserves integer DEFAULT 1 NOT NULL,
+    ou_id character varying NOT NULL,
+    image_id character varying NOT NULL,
+    image_name character varying NOT NULL,
+    protocol character varying,
+    last_check_time timestamp without time zone
+);
+
+
+ALTER TABLE public.pre_reserves OWNER TO openrlabs;
+
+--
+-- Name: pre_reserves_id_seq; Type: SEQUENCE; Schema: public; Owner: openrlabs
+--
+
+CREATE SEQUENCE public.pre_reserves_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.pre_reserves_id_seq OWNER TO openrlabs;
+
+--
+-- Name: pre_reserves_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: openrlabs
+--
+
+ALTER SEQUENCE public.pre_reserves_id_seq OWNED BY public.pre_reserves.id;
+
+
+--
 -- Name: services; Type: TABLE; Schema: public; Owner: openrlabs
 --
 
@@ -566,13 +615,6 @@ ALTER SEQUENCE public.services_id_seq OWNED BY public.services.id;
 --
 
 ALTER TABLE ONLY public.active_directory ALTER COLUMN id SET DEFAULT nextval('public.active_directory_id_seq'::regclass);
-
-
---
--- Name: active_reserves id; Type: DEFAULT; Schema: public; Owner: openrlabs
---
-
-ALTER TABLE ONLY public.active_reserves ALTER COLUMN id SET DEFAULT nextval('public.active_reserves_id_seq'::regclass);
 
 
 --
@@ -653,6 +695,20 @@ ALTER TABLE ONLY public.pop3_servers ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: pre_reserves id; Type: DEFAULT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.pre_reserves ALTER COLUMN id SET DEFAULT nextval('public.pre_reserves_id_seq'::regclass);
+
+
+--
+-- Name: reserves id; Type: DEFAULT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.reserves ALTER COLUMN id SET DEFAULT nextval('public.active_reserves_id_seq'::regclass);
+
+
+--
 -- Name: services id; Type: DEFAULT; Schema: public; Owner: openrlabs
 --
 
@@ -668,10 +724,10 @@ ALTER TABLE ONLY public.active_directory
 
 
 --
--- Name: active_reserves active_reserves_pkey; Type: CONSTRAINT; Schema: public; Owner: openrlabs
+-- Name: reserves active_reserves_pkey; Type: CONSTRAINT; Schema: public; Owner: openrlabs
 --
 
-ALTER TABLE ONLY public.active_reserves
+ALTER TABLE ONLY public.reserves
     ADD CONSTRAINT active_reserves_pkey PRIMARY KEY (id);
 
 
@@ -788,6 +844,14 @@ ALTER TABLE ONLY public.pop3_servers
 
 
 --
+-- Name: pre_reserves prereserves_pkey; Type: CONSTRAINT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.pre_reserves
+    ADD CONSTRAINT prereserves_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: services services_name_key; Type: CONSTRAINT; Schema: public; Owner: openrlabs
 --
 
@@ -812,10 +876,10 @@ ALTER TABLE ONLY public.services
 
 
 --
--- Name: active_reserves active_reserves_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: openrlabs
+-- Name: reserves active_reserves_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: openrlabs
 --
 
-ALTER TABLE ONLY public.active_reserves
+ALTER TABLE ONLY public.reserves
     ADD CONSTRAINT active_reserves_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.auth_user(id) ON DELETE CASCADE;
 
 
@@ -857,6 +921,14 @@ ALTER TABLE ONLY public.auth_membership
 
 ALTER TABLE ONLY public.auth_permission
     ADD CONSTRAINT auth_permission_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.auth_group(id) ON DELETE CASCADE;
+
+
+--
+-- Name: reserves reserves__prereserve_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: openrlabs
+--
+
+ALTER TABLE ONLY public.reserves
+    ADD CONSTRAINT reserves__prereserve_id_fkey FOREIGN KEY (prereserve_id) REFERENCES public.pre_reserves(id) ON DELETE CASCADE;
 
 
 --

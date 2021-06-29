@@ -167,6 +167,7 @@ class RedirectEvents(OgnsysAction):
                                                                             "&ou_id=" + ou_id + \
                                                                             "&maxtime=" + maxtime                                                                           
         
+        
         body = {
                   "urlLogin": urlogin,
                   "urlLogout": urlogout

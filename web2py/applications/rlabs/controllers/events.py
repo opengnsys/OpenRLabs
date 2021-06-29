@@ -36,11 +36,19 @@ def getEventsLogin():
 
 def getEventsLogout():
     print('Evento producido: logout')
+
+    tmp_d = {}
+    for k,v in request.vars.items():
+        if 'amp;' in k:
+            nk = k.replace('amp;', '')
+            tmp_d.update({nk: v})
+
+    request.vars.update(tmp_d)
     
-    opengnsys = Ognsys(db)    
+    opengnsys = Ognsys(db)
     if opengnsys.set_apikey(request.vars.ou_id):  
              
-        my_context = Storage(**request.vars)  
+        my_context = Storage(**request.vars) 
         my_context['db'] = db
         
         client = Client(my_context)        

@@ -134,9 +134,9 @@ def prereserves():
 
 
             grid.element('#pre_reserves_init_time')['_required'] = "required"
-            grid.element('#pre_reserves_init_time')['_type'] = "datetime-local"
+            #grid.element('#pre_reserves_init_time')['_type'] = "datetime-local"
             grid.element('#pre_reserves_finish_time')['_required'] = "required"
-            grid.element('#pre_reserves_finish_time')['_type'] = "datetime-local"
+            #grid.element('#pre_reserves_finish_time')['_type'] = "datetime-local"
             grid.element('#pre_reserves_finish_time')['_onchange'] = "check_min_finish_time(event)"            
             
             grid.element('#pre_reserves_lab_name')['_readonly'] = 'readonly'

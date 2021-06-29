@@ -23,7 +23,7 @@ import errors
 class UsingPoolManagerConnector:
     def __init__(self, pool_manager):
         self.pool_manager = pool_manager
-        self.TIMEOUT = 0.05
+        self.TIMEOUT = 0.5
         self.TIMEOUT_POST = 1
         
     def do_action(self, action):

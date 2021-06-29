@@ -37,6 +37,9 @@ de administración):
 chmod +x install.sh
 sudo foo ./install.sh
 
+NOTA: La contraseña para el usuario administrador elegido será "admin".
+      Se recomienda encarecidamente que se modifique tras el primer acceso a OpenRLabs.
+
 ACTUALIZACIÓN
 
 El proceso de actualización salva los datos de la base de

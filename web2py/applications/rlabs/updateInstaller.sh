@@ -97,7 +97,8 @@ rm -fr web2py_rlabs
 #
 ###########################
 
-sudo -u postgres pg_dump -s openrlabs > openrlabs.sql
+#sudo -u postgres pg_dump -s openrlabs > openrlabs.sql
+pg_dump -U openrlabs -h 127.0.0.1 -p 5432 -s openrlabs > openrlabs.sql
 
 ##############################
 #
