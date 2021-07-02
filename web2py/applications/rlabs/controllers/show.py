@@ -106,3 +106,18 @@ def unreserve():
         return json.dumps({"response": "200 OK"})
     else:
         return json.dumps({"response": "500 Innternal Error"})
+
+## Ajax json clients {'ip': HTML_ID}
+## return {HTML_ID : status}
+@auth.requires_membership('enabled')
+def check_status_clients():    
+    client_status = {}
+    my_context = Storage()    
+    for k,v in request.post_vars.items():
+        my_context['ip'] = k
+        client = Client(my_context)
+        status = client.get_status_client()
+        client_status.update({v: status})
+        
+    
+    return json.dumps(client_status)

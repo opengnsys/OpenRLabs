@@ -1,0 +1,22 @@
+FROM python:3
+
+ENV TZ=Europe/Madrid
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update &&  apt-get install -y \
+        cron \
+        libldap-dev \
+        libsasl2-dev
+
+RUN echo "* * * * * root /var/www/web2py/applications/rlabs/scripts/exec_bg_check.sh" >> /etc/crontab
+RUN echo "0 1 * * * root /var/www/web2py/applications/rlabs/scripts/clear_fs_sessions.sh" >> /etc/crontab
+
+
+COPY ./cron/requirements.txt .
+
+RUN pip install --upgrade pip
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+
+CMD ["/usr/sbin/cron", "-f"]

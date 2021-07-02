@@ -15,6 +15,7 @@
 <script src="{{=URL('static','js/rlabs/rlabs-modal.js')}}" type="text/javascript"></script>
  -->
 <script src="{{=URL('static','js/rlabs-min.js')}}" type="text/javascript"></script>
+<script src="{{=URL('static','js/rlabs/rlabs-status-pc.js')}}" type="text/javascript"></script>
  
 <script type="text/javascript">
 var labs_showed = 0;
@@ -45,8 +46,7 @@ function get_remotePCs(event) {
 	if (labs_showed !== event.target.getAttribute('data-lab_id')) {
 		labs_showed = event.target.getAttribute('data-lab_id');
 		table_lab_id = event.target.getAttribute('data-lab_id');
-		table_lab = document.getElementById('lab_' + table_lab_id);
-		table_lab.setAttribute("style", "background : #bfbfbf;display:block;");
+		table_lab = event.target.getAttribute("style", "background : #bfbfbf;display:block;");
 		
 		cursor_wait('wait');
 		
@@ -241,8 +241,8 @@ function swicht_sound(event){
 	}
 	
  window.onload = function () {
-		var active_reserves = document.getElementsByClassName('active_reserve_status')
-		var loggedin = false;
+		let active_reserves = document.getElementsByClassName('active_reserve_status')
+		let loggedin = false;
 		for ( i=0; i < active_reserves.length; i++ ) {
 			if (active_reserves[i].getAttribute('data-loggedin') === "True") {
 				loggedin = true
@@ -250,13 +250,30 @@ function swicht_sound(event){
 				loggedin = false
 			}
 			if (active_reserves[i].getAttribute('data-status') !== "undefined") {
-				var status_object = {'status' : active_reserves[i].getAttribute('data-status'),
+				let status_object = {'status' : active_reserves[i].getAttribute('data-status'),
 									 'loggedin': loggedin};
-				var img_status = getImg_pc(status_object)
+				let img_status = getImg_pc(status_object)
 				active_reserves[i].setAttribute('src', '../static/images/' + img_status)
 			}
 		}
+		var statusObserver = new StatusObserver('{{=URL("show", "check_status_clients")}}', 
+												document.getElementsByClassName('btn-client-connect'));
+		statusObserver.run();
+		document.addEventListener("visibilitychange", onchangePage);
+
+		function onchangePage(event) {
+			if (document.visibilityState == 'hidden') {
+				statusObserver.stop();
+			}
+			if (document.visibilityState == 'visible') {
+				statusObserver.run();
+			}			
+			
+		}		
+
 }
+
+
 
 </script>
 
@@ -311,12 +328,12 @@ function swicht_sound(event){
 			<td>	
 			<!--  If poolmanager cheking this host -->		
 			{{ if 'status' in reserve:}}				
-            	<img class='status_equipo active_reserve_status' data-status="{{=reserve['status']}}"
+            	<img id="img_connect_reserve_{{=reserve['id']}}" class='status_equipo active_reserve_status' data-status="{{=reserve['status']}}"
                                                 data-loggedin="{{=reserve['loggedin']}}"
                                                 src='../static/images/odernador_WIN.png'>
             {{else:}}
 
-                 <img class='status_equipo active_reserve_status' data-status="busy"
+                 <img id="img_connect_reserve_{{=reserve['id']}}" class='status_equipo active_reserve_status' data-status="busy"
                                                 src='../static/images/odernador_WIN.png'>
             {{pass}}
 			</td><td>
@@ -327,7 +344,7 @@ function swicht_sound(event){
 			<span>{{=reserve['user_id']}}</span>
 			</td>			
 			<td>
-			<span><button id="btn_connect_reserve_{{=reserve['id']}}"  type="button" class="btn btn-secondary"
+			<span><button id="btn_connect_reserve_{{=reserve['id']}}"  type="button" class="btn btn-secondary btn-client-connect"
 						  onclick="connect_remotePC(event)"
 						  data-reserve_id="{{=reserve['id']}}"
 						  data-sound="on"

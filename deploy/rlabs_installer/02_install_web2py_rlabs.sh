@@ -60,11 +60,14 @@ else
 fi
 chown -R www-data.www-data $w2p_dir
 
+w2p_dir_orig sh= "/var/www/web2py/"
+w2p_dir_orig_scaped=$(echo $w2p_dir_orig | sed 's/\//\\\//g')
+
+w2p_dir_scaped=$(echo $w2p_dir | sed 's/\//\\\//g')
+
+sed -i -e "s/$w2p_dir_orig_scaped/$w2p_dir_scaped/g"  $w2p_dir/applications/rlabs/scripts/w2p_clear_sessions
 echo "0 1 * * * root $w2p_dir/applications/rlabs/scripts/clear_fs_sessions.sh" > /etc/cron.d/w2p_clear_sessions
 
-w2p_dir_orig = "/var/www/web2py/"
-w2p_dir_orig_scaped=$(echo $w2p_dir_orig | sed 's/\//\\\//g')
-w2p_dir_scaped=$(echo $w2p_dir | sed 's/\//\\\//g')
-sed -i -e "s/$w2p_dir_orig_scaped/$w2p_dir_scaped/g"  $w2p_dir/applications/rlabs/scripts/exec_bg_check.sh
 
+sed -i -e "s/$w2p_dir_orig_scaped/$w2p_dir_scaped/g"  $w2p_dir/applications/rlabs/scripts/exec_bg_check.sh
 echo "* * * * * root $w2p_dir/applications/rlabs/scripts/exec_bg_check.sh" > /etc/cron.d/w2p_bg_check

@@ -13,10 +13,32 @@ services:
      dockerfile: ./Dockerfile.uwsgi-python
    depends_on:
      - db
+     
+   volumes:
+     - w2p-dir:/var/www/web2py/
+     
    tty: true
 
    networks:
      - private-network
+
+  #Cron
+  cron-web2py:
+   image: cron-web2py
+   container_name: cron-web2py
+   restart: unless-stopped
+   build:
+     context: .
+     dockerfile: ./Dockerfile.cron-web2py
+   depends_on:
+     - web2py-uwsgi
+   volumes:
+     - w2p-dir:/var/www/web2py/
+   tty: true
+
+   networks:
+     - private-network
+
 
   #Nginx Service 
   webserver:
@@ -92,6 +114,7 @@ networks:
 
 #Volumes
 volumes:
+ w2p-dir: 
  postgres-data:
          driver: local     
   
