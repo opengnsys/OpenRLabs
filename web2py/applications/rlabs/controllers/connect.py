@@ -23,6 +23,27 @@ from ados import adoDB_openRlabs_setup
 import ports_manager
 import logger
 
+@auth.requires_membership('enabled')
+def do_assing_reserve():    
+    if request.post_vars:
+        opengnsys = Ognsys(db)    
+        if opengnsys.set_apikey(request.post_vars.ou_id):
+                     
+            my_context = Storage(**request.post_vars)  
+            my_context['db'] = db
+            my_context['user_id'] = auth.user_id
+            my_context['num_retries'] = 0
+            
+            connection = Connection(my_context)
+            reserve = connection.do_assign_reserve()
+            
+            if reserve:
+                return json.dumps(reserve)
+            else:
+                return json.dumps(request.post_vars)
+    else:
+        return json.dumps({'error': 'Error haciendo reserva'})
+
 @auth.requires_membership('enabled')   
 def do_reserve():
     if request.post_vars:

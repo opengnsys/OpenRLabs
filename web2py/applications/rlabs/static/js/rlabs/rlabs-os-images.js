@@ -14,7 +14,7 @@ function show_images(image, index){
 	new_cell.innerHTML = "<span> " + image.os + " </span>"
 	new_cell = new_row.insertCell();
 	new_cell.innerHTML = "<span><button type='button' class='btn btn-outline-secondary'" +
-							"onClick='select_mode_connect(event)'" +
+							"onClick='do_assign_reserve(event)'" +
 							"data-ou_id='" +image.ou_id + "'" +
 							"data-image_id='" + image.id + "'" +
 							"data-lab_id='" + image.lab_id + "'" +

@@ -10,8 +10,8 @@ function show_PCs(PCs){
 	if (PCs.images_info[0] !== undefined){
 		insert_space_table_lab(PCs.images_info[0].lab_id);
 	}
-	delete_disponibles();
-	insert_disponibles_before_pcs(PCs.disponibles_info);	
+	// delete_disponibles();
+	// insert_disponibles_before_pcs(PCs.disponibles_info);	
 	PCs.PCs_info.forEach(show_PC);
 	cursor_wait('pointer');
 	table_lab = document.getElementById('lab_' + PCs.images_info[0].lab_id);

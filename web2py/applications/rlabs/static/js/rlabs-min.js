@@ -37,7 +37,7 @@ function show_images(image,index){img=getImg_sys(image.os);var table=document.ge
 "data-lab_id='"+image.lab_id+"'>"
 new_cell=new_row.insertCell();new_cell.innerHTML="<span> "+image.os+" </span>"
 new_cell=new_row.insertCell();new_cell.innerHTML="<span><button type='button' class='btn btn-outline-secondary'"+
-"onClick='select_mode_connect(event)'"+
+"onClick='do_assign_reserve(event)'"+
 "data-ou_id='"+image.ou_id+"'"+
 "data-image_id='"+image.id+"'"+
 "data-lab_id='"+image.lab_id+"'"+
@@ -50,7 +50,7 @@ break;}
 return img;}
 function show_PCs(PCs){reset_style_table_lab(PCs.images_info[0].lab_id)
 delete_pcs();delete_images();delete_spaces();hide_footer();PCs.images_info.forEach(show_images);if(PCs.images_info[0]!==undefined){insert_space_table_lab(PCs.images_info[0].lab_id);}
-delete_disponibles();insert_disponibles_before_pcs(PCs.disponibles_info);PCs.PCs_info.forEach(show_PC);cursor_wait('pointer');table_lab=document.getElementById('lab_'+PCs.images_info[0].lab_id);table_lab.setAttribute("style","background : white;display:block;");;}
+PCs.PCs_info.forEach(show_PC);cursor_wait('pointer');table_lab=document.getElementById('lab_'+PCs.images_info[0].lab_id);table_lab.setAttribute("style","background : white;display:block;");;}
 function reset_style_table_lab(table_lab_id){table_lab=document.getElementById('lab_'+table_lab_id);table_lab.setAttribute("style","background : white;display:block;cursor:pointer");}
 function show_PC(PC,index){var img=getImg_pc(PC.pc.status);var table=document.getElementById("table_lab_"+PC.pc.lab.id);var new_row=table.insertRow();new_row.setAttribute("id","pc_"+PC.pc.id);new_row.setAttribute("style","display:block;");new_row.setAttribute("class","pc");var new_cell=new_row.insertCell();new_cell.innerHTML="<img class='status_equipo' src='../static/images/"+img+"' "+
 "data-id='"+PC.pc.id+
@@ -83,5 +83,18 @@ function show__progress_bar(){var progress_bar=document.getElementById("progress
 var progressbar=$('#progress_bar'),max=progressbar.attr('max'),time=time,value=progressbar.val();var loading=function(){value+=1;addValue=progressbar.val(value);$('.progress_value').html(value+'%');if(value==max){clearInterval(animate);}};var animate=setInterval(function(){loading();},time);return animate;}
 function stop_progress_bar(){clearInterval(animator);document.getElementById("progress_bar").setAttribute("value","100");}
 function reset_progress_bar(){clearInterval(animator);document.getElementById("progress_bar").setAttribute("value","0");document.getElementById("progress_value").innerHTML="0%";}
+class StatusObserver{constructor(url,clients_to_connect){this.AWAIT_TIME_MS=10000;this.url=url
+this.clients_to_connect=clients_to_connect;this.data_clients={}
+this.xhr=new XMLHttpRequest();this.interval=null;}
+set_status_img_client(reserve_id,respuesta){document.getElementById("img_connect_reserve_"+
+reserve_id).setAttribute('src',"../static/images/"+getImg_pc(respuesta[reserve_id]));}
+set_status_img_clients(respuesta){for(i=0;i<this.clients_to_connect.length;i++){let reserve_id=this.clients_to_connect[i]['id'].split('_')[3]
+this.set_status_img_client(reserve_id,respuesta);}}
+do_request(){this.xhr.open("POST",this.url,true);this.xhr.setRequestHeader("Content-Type","application/json;charset=UTF-8");this.xhr.send(JSON.stringify(this.data_clients));this.xhr.onreadystatechange=()=>{this.xhr.onreadystatechange=()=>{if(this.xhr.readyState==4&&this.xhr.status==200){var respuesta=JSON.parse(this.xhr.responseText);this.set_status_img_clients(respuesta);}}}}
+check_status_clients(){for(i=0;i<this.clients_to_connect.length;i++){this.data_clients[this.clients_to_connect[i].getAttribute('data-ip')]=this.clients_to_connect[i].getAttribute('data-reserve_id');}
+this.do_request();}
+run(){this.check_status_clients()
+this.interval=setInterval(this.check_status_clients.bind(this),this.AWAIT_TIME_MS);}
+stop(){clearInterval(this.interval);}}
 function delete_by_class(class_name){var class_items=document.getElementsByClassName(class_name);for(i=class_items.length-1;i>-1;i--){class_items[i].remove();}}
 function hide_by_class(class_name){var class_items=document.getElementsByClassName(class_name);for(i=0;i<class_items.length-1;i++){class_items[i].style.display='none';}}

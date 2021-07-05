@@ -39,44 +39,38 @@ class Connection:
         self.MAX_RETRIES = int((adoDB_openRlabs_setup.getSetup_OpenRLabs(my_context['db'])['seconds_to_wait'] / self.WAIT_CHECK_LOOP) - 1)
         
      
-    def __assign_reserve(self):
-        reserve = adoDB_reserves.get_by_lab_img(self.my_context.db,self.my_context['lab_id'], self.my_context['image_id'], False).first()
-        reserve.update_record(user_id=self.my_context['user_id'],
-                              is_assigned = True,
-                              assigned_init_time = datetime.now())
+    def do_assign_reserve(self):        
+        reserve = adoDB_reserves.get_available_hosts(self.my_context.db,self.my_context['lab_id'], 
+                                                self.my_context['image_id']).first()
+        if reserve:
+            reserve.update_record(user_id=self.my_context['user_id'],
+                                is_assigned = True,
+                                assigned_init_time = datetime.now())
 
-        self.my_context.db.commit() 
-        
-        print(self.my_context)
+            self.my_context.db.commit()                 
 
-        equipo_reservado = {}
-        equipo_reservado['id'] = reserve['pc_id']
-        equipo_reservado['name'] = reserve['pc_name']
-        equipo_reservado['ip'] = reserve['ip']
-        equipo_reservado['mac'] = reserve['mac']
-        equipo_reservado['client_type'] = self.my_context.client_type
-        equipo_reservado['protocol'] = reserve['protocol']
-        equipo_reservado['port'] = reserve['port']
-        equipo_reservado.update({'ou_id' : reserve['ou_id'], 'ou' : None,
-                                          'lab_id': reserve['lab_id'], 'lab' : None,
-                                         'num_retries' : 0})
-                
-        #Por compatibilidad con el resto de la app
-        #Que usa pc_id por claridad.
-        equipo_reservado['pc_id'] = equipo_reservado['id']
-        
-        return {'status': '\n Reserva realizada. Equipo concedido: ' + equipo_reservado['name'] + 
-                        '\n Arrancando equipo: ../',
-                        'equipo_reservado': equipo_reservado}
+            equipo_reservado = {}
+            equipo_reservado['id'] = reserve['pc_id']
+            equipo_reservado['name'] = reserve['pc_name']
+            equipo_reservado['ip'] = reserve['ip']
+            equipo_reservado['mac'] = reserve['mac']
+            equipo_reservado['protocol'] = reserve['protocol']
+            equipo_reservado['port'] = reserve['port']
+            equipo_reservado['ou_id'] = reserve['ou_id']
+            equipo_reservado['lab_id'] = reserve['lab_id']
+                    
+            #Por compatibilidad con el resto de la app
+            #Que usa pc_id por claridad.
+            equipo_reservado['pc_id'] = equipo_reservado['id']
+                        
+
+            return equipo_reservado
+        else:
+            return None
+            
 
 
     def do_reserve(self):
-        try:
-            return self.__assign_reserve()
-        except:            
-            return self.__do_reserve()
-
-    def __do_reserve(self):
         print('reserve remote PC')
         equipo_reservado= None
         # Al hacer reserva se manda arrancar el equipo y se crea entrada en cola acciones para levantar el equipo
@@ -105,8 +99,7 @@ class Connection:
                 print('insert reserva')
                 try:           
                     adoDB_reserves.insert(self.my_context)
-                except:
-                    print(equipo_reservado)
+                except:                    
                     return {'error': '\n Error de reserva. No es posible registrar reserva en openrlabs'}
                 
                 self.client.update_context(self.my_context)
@@ -175,7 +168,7 @@ class Connection:
                         'equipo_reservado' : self.my_context,
                         'wait_to_check' : self.WAIT_CHECK_LOOP}
             else:
-                
+                adoDB_reserves.set_is_running_true(self.my_context.db, pc_id)
                 return {'ip': ip, 'protocol': protocol, 'port': port, 
                        'pc_id': pc_id,'pc_name' : pc_name, 
                        'ou_id': ou_id, 'lab_id': lab_id,

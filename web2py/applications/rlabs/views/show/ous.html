@@ -13,9 +13,10 @@
 <script src="{{=URL('static','js/rlabs/rlabs-pc.js')}}" type="text/javascript"></script>
 <script src="{{=URL('static','js/rlabs/rlabs-footer.js')}}" type="text/javascript"></script>
 <script src="{{=URL('static','js/rlabs/rlabs-modal.js')}}" type="text/javascript"></script>
+<script src="{{=URL('static','js/rlabs/rlabs-status-pc.js')}}" type="text/javascript"></script>
  -->
 <script src="{{=URL('static','js/rlabs-min.js')}}" type="text/javascript"></script>
-<script src="{{=URL('static','js/rlabs/rlabs-status-pc.js')}}" type="text/javascript"></script>
+
  
 <script type="text/javascript">
 var labs_showed = 0;
@@ -63,12 +64,11 @@ function get_remotePCs(event) {
 */
 var parametros = null;
 
-function select_mode_connect(event){		
-	var button = event.target;
+function select_mode_connect(ou_id, image_id, lab_id){			
 	
-	parametros = 'ou_id=' + button.getAttribute('data-ou_id') +
-					 '&image_id=' + button.getAttribute('data-image_id') +
-					 '&lab_id=' + button.getAttribute('data-lab_id')					 
+	parametros = 'ou_id=' + ou_id +
+					 '&image_id=' +image_id +
+					 '&lab_id=' + lab_id
 		
 	$("#modalSelectMode").modal();			
 }
@@ -136,6 +136,29 @@ function do_reserve(event){
 	
 }
 
+function do_assign_reserve(event){
+	var button = event.target;
+	
+	let parametros = 'ou_id=' + button.getAttribute('data-ou_id') +
+					 '&image_id=' + button.getAttribute('data-image_id') +
+					 '&lab_id=' + button.getAttribute('data-lab_id')					 	
+
+	requestAJAX('{{=URL("connect", "do_assing_reserve")}}', parametros, check_assigned);
+}
+
+function check_assigned(respuesta) {
+	console.log(respuesta);
+	if (respuesta.pc_id === undefined){
+		console.log('kk')
+		select_mode_connect(respuesta.ou_id, respuesta.image_id, respuesta.lab_id);
+	} else {
+		console.log('kk2')
+		refresh_page();
+	}
+
+
+
+}
 /********
  *  Call next stage of connection pc and show results in console.
  *  When finished, call fucntion to either connect a PC or do port forwarding.
