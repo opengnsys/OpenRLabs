@@ -11,8 +11,8 @@
 #################################################################################
 
 import gluon # quitar en produccion. Sirve para que eclipse no de errores.
-import json     
-  
+import json
+
 from gluon.storage import Storage
 
 from ognsys import Ognsys
@@ -21,8 +21,22 @@ from client_lab import Client
 from reserves import ActiveReserves
 import ou
 from  ados import adoDB_services, adoDB_reserves, adoDB_openRlabs_setup
-import connector
 
+
+@auth.requires_membership('enabled')
+def get_reserves():
+    active_reserves = ActiveReserves(db, auth.user_id, auth.user_groups.values())
+    reserves = active_reserves.get_reserves()
+
+    for reserve in reserves:
+        reserve.update({'reserved_init_time': 'None'})  
+        reserve.update({'expiration_time': 'None'})  
+        reserve.update({'assigned_init_time': 'None'})  
+
+    if len(reserves) > 0:
+        return json.dumps(reserves)
+    else:
+        return json.dumps({'active_reserves': 'None'})
 
 @auth.requires_membership('enabled')
 def ous():
