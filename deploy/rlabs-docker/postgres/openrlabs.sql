@@ -92,7 +92,8 @@ CREATE TABLE public.reserves (
     image_id character varying NOT NULL,
     reserved_init_time timestamp without time zone NOT NULL,
     prereserve_id integer,
-    mac character varying NOT NULL
+    mac character varying NOT NULL,
+    is_running boolean DEFAULT false NOT NULL
 );
 
 
@@ -547,7 +548,8 @@ CREATE TABLE public.pre_reserves (
     image_id character varying NOT NULL,
     image_name character varying NOT NULL,
     protocol character varying,
-    last_check_time timestamp without time zone
+    last_decreased_time timestamp without time zone,
+    attempted_boots integer DEFAULT 0 NOT NULL
 );
 
 
