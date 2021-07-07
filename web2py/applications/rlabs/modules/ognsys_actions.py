@@ -126,7 +126,7 @@ class GetDiskConfigClient(OgnsysAction):
         
     
 class ReserveClient(OgnsysAction):
-    def __init__(self, ou_id, image_id, lab_id, maxtime):                
+    def __init__(self, ou_id, image_id, lab_id, maxtime):          
         body = {
                   "labid": lab_id,
                   "maxtime": int(maxtime)

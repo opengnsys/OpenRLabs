@@ -49,7 +49,7 @@ class Client:
             
 
 
-    def reserve_remote_pc(self):
+    def reserve_remote_pc(self):        
         self.http_request.set_connector(UsingPoolManagerConnector(ognsys_globals.local.__POOL_MANAGER__))        
         return self.http_request.do_action(ReserveClient(self.context.ou_id,
                                                          self.context.image_id,
