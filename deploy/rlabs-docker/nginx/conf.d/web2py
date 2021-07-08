@@ -1,6 +1,6 @@
 server {
-        listen          80;
-        server_name     webserver;
+        listen          80 default_server;
+        server_name     _;
 
 	return 301 https://$server_name$request_uri;	
 }
@@ -31,8 +31,8 @@ server {
     }
 
 server {
-        listen 443 default_server ssl;
-        server_name     webserver;
+        listen 443		default_server ssl;
+        server_name 	_;
         ssl_certificate         /etc/nginx/ssl/web2py.crt;
         ssl_certificate_key     /etc/nginx/ssl/web2py.key;
         ssl_prefer_server_ciphers on;
