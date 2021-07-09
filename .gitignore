@@ -7,17 +7,19 @@ __pycache__/
 web2py_source/
 
 # web2py
-web2py/**
+web2py/*
+!web2py/applications
+web2py/applications/*
 !web2py/applications/rlabs
+
+#rlabs
 web2py/applications/rlabs/**/*.py[cod]
 web2py/applications/rlabs/**/*$py.class
-
-# rlabs
-cache/**
-databases/**
-errors/**
-sessions/**
-.settings/**
+web2py/applications/rlabs/cache/**
+web2py/applications/rlabs/databases/**
+web2py/applications/rlabs/errors/**
+web2py/applications/rlabs/sessions/**
+web2py/applications/rlabs/.settings/**
 *˜
 *.pyc
 *.bak

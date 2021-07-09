@@ -1,0 +1,123 @@
+{{extend 'layout.html'}}
+
+
+<script src="{{=URL('static', 'js/moment.min.js')}}"></script>
+<link href="{{=URL('static', 'css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet">
+<script src="{{=URL('static', 'js/bootstrap-datetimepicker.min.js')}}"></script>
+
+
+<link href="{{=URL('static', 'css/setup.css')}}" rel="stylesheet"	type="text/css" />
+
+<script type="text/javascript">
+
+$(function(){
+	let params = { 
+		inline: false,
+        sideBySide: true,		
+		format: 'DD/MM/YYYY HH:mm:ss',		
+		}
+
+    $("#pre_reserves_init_time").datetimepicker(params);
+	$("#pre_reserves_finish_time").datetimepicker(params);
+});
+
+xhr = new XMLHttpRequest();
+
+function requestAJAX(url, parametros, callbackFunction){
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');    
+    xhr.send(parametros);        
+	console.log('xhr')
+	console.log(xhr)
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {        	
+        	var respuesta = JSON.parse(xhr.responseText);        	
+
+        	if (respuesta.error === undefined) { 
+	        	
+	        	// Use callback for synchronize ajax response with html view        	
+	            callbackFunction(respuesta);
+	            
+	        } else {
+	        	alert(respuesta.error);
+	        	refresh_page();
+	        	//document.getElementById("buttonConsole").style.display = 'block';
+	        	//reset_progress_bar();
+	        }
+        } 
+    }
+	
+}
+
+function check_min_finish_time(event) {
+	let init_time = document.getElementById('pre_reserves_init_time').value;
+	let finish_time = document.getElementById('pre_reserves_finish_time').value;
+	if (init_time > finish_time) {
+		alert('¡¡Finish time must be lower than init time!!');
+	}
+	document.getElementById('pre_reserves_finish_time').focus();
+}
+
+function set_image_id(event) {
+	let image_id_select = document.getElementById('pre_reserves_image_name');
+	image_id = image_id_select.options[image_id_select.selectedIndex].getAttribute('data-image_id')	
+	document.getElementById('pre_reserves_image_id').value = image_id;
+}
+
+function populate_images(images) {			
+	let image_select = document.getElementById('pre_reserves_image_name')
+	for ( let i = image_select.length - 1; i >= 0; i -- ) {
+		image_select.remove(i);
+	}
+
+	for ( let j = 0; j < images.length; j ++ ) {
+		//console.log(images[i]['id']);
+		//console.log(images[i]['os']);
+		const option = document.createElement('option');
+      	option.text = images[j]['os'];
+      	option.value = images[j]['os'];
+		option.setAttribute('data-image_id', images[j]['id']);
+      	image_select.add(option);			
+	}	
+	set_image_id();	
+
+}
+
+
+function set_lab_name(event) {
+	// console.log(event.target.options[event.target.selectedIndex].text);
+	var list_hosts = {{=max_hosts_lab}};
+	var list_ous =  {{=lab_ous}};
+
+	var lab_id = document.getElementById('pre_reserves_lab_id').value;	
+	document.getElementById('pre_reserves_num_reserves').max = list_hosts[lab_id];
+	document.getElementById('pre_reserves_num_reserves').value = list_hosts[lab_id];
+	
+	document.getElementById('pre_reserves_ou_id').value = list_ous[lab_id];	
+	
+
+	var lab_name = event.target.options[event.target.selectedIndex].text;
+	document.getElementById('pre_reserves_lab_name').value = lab_name;	
+	
+	requestAJAX('{{=URL("setup", "get_images_lab")}}',
+						'ou_id=' + list_ous[lab_id] +
+						'&lab_id=' + lab_id, 
+						populate_images);
+	
+
+}
+
+</script>
+
+<div class="container_setup">
+	<div class="menu_config">
+	 {{include 'setup/menu.html'}} 
+	</div>
+	
+	<div class="form_config">
+		{{=grid}}
+	</div>
+</div>
+
