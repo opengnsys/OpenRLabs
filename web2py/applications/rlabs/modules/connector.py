@@ -168,7 +168,9 @@ class Connection:
                         'equipo_reservado' : self.my_context,
                         'wait_to_check' : self.WAIT_CHECK_LOOP}
             else:
+
                 adoDB_reserves.set_is_running_true(self.my_context.db, pc_id)
+
                 return {'ip': ip, 'protocol': protocol, 'port': port, 
                        'pc_id': pc_id,'pc_name' : pc_name, 
                        'ou_id': ou_id, 'lab_id': lab_id,
@@ -176,10 +178,8 @@ class Connection:
                        'client_type': client_type,
                        'status' : '\n Conexión realizada con éxito.'}
         else:        
-    
-
-            client = Client(my_context)
-            client.unreserve_remote_pc()
+                
+            self.client.unreserve_remote_pc()
                          
             return {'error': 'Fallo al encender el equipo de forma remota.\n Intentelo con otro equipo.'}
           
